@@ -185,32 +185,185 @@ function getSessionInfo(data, date) {
   return null;
 }
 function exportCSV(data) {
-  var rows = [["Date","Type","Session","Exercise","Set","Weight","Done"]];
-  var dates = Object.keys(data.sessions||{}).sort();
-  for (var i=0; i<dates.length; i++) {
-    var date = dates[i];
+
+  // Helper: escape cell for CSV (wrap in quotes if contains comma/newline)
+  function cell(v) {
+    var s = v === null || v === undefined ? "" : String(v);
+    if (s.indexOf(",") > -1 || s.indexOf("\n") > -1 || s.indexOf('"') > -1) {
+      s = '"' + s.replace(/"/g,'""') + '"';
+    }
+    return s;
+  }
+  function row(arr) { return arr.map(cell).join(","); }
+
+  // Exercise ID → readable name lookup
+  var exNames = {};
+  Object.keys(GYM_SESSIONS).forEach(function(sName) {
+    GYM_SESSIONS[sName].forEach(function(ex) { exNames[ex.id] = ex.name; });
+  });
+
+  var sections = [];
+
+  // ── SECTION 1: GYM SESSIONS ──────────────────────────────────────────────
+  sections.push("TRAINING LOG — GYM SESSIONS");
+  sections.push(row(["Date","Session","Exercise","Set 1 (kg)","Set 2 (kg)","Set 3 (kg)","Set 4 (kg)","Best Weight (kg)","All Sets Done","Note"]));
+
+  var gymDates = Object.keys(data.sessions||{}).sort();
+  for (var i=0; i<gymDates.length; i++) {
+    var date = gymDates[i];
     var sess = data.sessions[date];
-    if (sess && sess.gym && sess.gym.name) {
-      var exIds = Object.keys(sess.gym.sets||{});
-      for (var j=0; j<exIds.length; j++) {
-        var exId = exIds[j];
-        var setIdxs = Object.keys(sess.gym.sets[exId]);
-        for (var k=0; k<setIdxs.length; k++) {
-          var s = sess.gym.sets[exId][setIdxs[k]];
-          rows.push([date,"gym",sess.gym.name,exId,setIdxs[k],s.weight||"",s.done?"yes":"no"]);
-        }
+    if (!sess || !sess.gym || !sess.gym.name) continue;
+    var sessionName = sess.gym.name;
+    var note = sess.gym.note || "";
+    var exIds = Object.keys(GYM_SESSIONS[sessionName] ? GYM_SESSIONS[sessionName].reduce(function(acc,ex){acc[ex.id]=true;return acc;},{}) : {});
+    // Use the ordered exercise list for this session
+    var exList = GYM_SESSIONS[sessionName] || [];
+    for (var j=0; j<exList.length; j++) {
+      var ex = exList[j];
+      var exLog = (sess.gym.sets && sess.gym.sets[ex.id]) || {};
+      var setWeights = [];
+      var allDone = true;
+      for (var k=0; k<ex.sets; k++) {
+        var s = exLog[k];
+        if (s && s.weight) { setWeights.push(s.weight); if (!s.done) allDone = false; }
+        else { setWeights.push(""); allDone = false; }
       }
+      // pad to 4 sets
+      while (setWeights.length < 4) setWeights.push("");
+      var best = getBestWeight(exLog);
+      var hasAnyData = setWeights.some(function(w){return w !== "";});
+      if (!hasAnyData) continue; // skip exercises not touched
+      sections.push(row([
+        date, sessionName, exNames[ex.id]||ex.id,
+        setWeights[0], setWeights[1], setWeights[2], setWeights[3],
+        best !== null ? best : "",
+        allDone ? "Yes" : "Partial",
+        j === 0 ? note : "" // only show note on first exercise row
+      ]));
     }
   }
-  var bodyLogs = data.bodyLogs||[];
-  for (var i=0; i<bodyLogs.length; i++) {
-    rows.push([bodyLogs[i].date,"weight","","","",bodyLogs[i].weight,""]);
+
+  sections.push(""); // blank line between sections
+
+  // ── SECTION 2: SWIM SESSIONS ─────────────────────────────────────────────
+  sections.push("TRAINING LOG — SWIM SESSIONS");
+  sections.push(row(["Date","Duration (min)","Laps","Sauna","Sauna Duration (min)"]));
+  var swimDates = Object.keys(data.sessions||{}).sort();
+  var hasSwim = false;
+  for (var i=0; i<swimDates.length; i++) {
+    var date = swimDates[i];
+    var sess = data.sessions[date];
+    if (sess && sess.swim && sess.swim.saved) {
+      hasSwim = true;
+      sections.push(row([
+        date,
+        sess.swim.mins || "",
+        sess.swim.laps || "",
+        sess.swim.sauna ? "Yes" : "No",
+        sess.swim.sauna ? (sess.swim.saunaTime || "") : ""
+      ]));
+    }
   }
-  var csv = rows.map(function(r){ return r.join(","); }).join("\n");
-  var blob = new Blob([csv], {type:"text/csv"});
+  if (!hasSwim) sections.push(row(["No swim sessions logged yet","","","",""]));
+
+  sections.push("");
+
+  // ── SECTION 3: BODY WEIGHT ───────────────────────────────────────────────
+  sections.push("BODY WEIGHT LOG");
+  sections.push(row(["Date","Weight (kg)","Change from Previous (kg)","Notes"]));
+  var bodyLogs = data.bodyLogs || [];
+  for (var i=0; i<bodyLogs.length; i++) {
+    var prev = i > 0 ? bodyLogs[i-1].weight : null;
+    var change = prev !== null ? (Math.round((bodyLogs[i].weight - prev)*10)/10) : "";
+    var changeStr = change !== "" ? (change > 0 ? "+"+change : String(change)) : "—";
+    sections.push(row([bodyLogs[i].date, bodyLogs[i].weight, changeStr, ""]));
+  }
+  if (!bodyLogs.length) sections.push(row(["No weight logs yet","","",""]));
+
+  sections.push("");
+
+  // ── SECTION 4: NUTRITION / FOOD LOG ─────────────────────────────────────
+  sections.push("NUTRITION LOG");
+  sections.push(row(["Date","Food Item","Quantity","Unit","Calories (kcal)","Protein (g)","Carbs (g)","Fat (g)"]));
+  var foodDates = Object.keys(data.foodLogs||{}).sort();
+  var hasFood = false;
+  for (var i=0; i<foodDates.length; i++) {
+    var date = foodDates[i];
+    var foods = data.foodLogs[date] || [];
+    for (var j=0; j<foods.length; j++) {
+      hasFood = true;
+      var f = foods[j];
+      sections.push(row([date, f.name||"", f.qty||"", f.unit||"", f.kcal||0, f.protein||0, f.carbs||0, f.fat||0]));
+    }
+    // Daily totals row
+    if (foods.length > 1) {
+      var tot = foods.reduce(function(acc,f){return{kcal:acc.kcal+(f.kcal||0),protein:acc.protein+(f.protein||0),carbs:acc.carbs+(f.carbs||0),fat:acc.fat+(f.fat||0)};},{kcal:0,protein:0,carbs:0,fat:0});
+      sections.push(row([date+" TOTAL","","","",Math.round(tot.kcal),Math.round(tot.protein*10)/10,Math.round(tot.carbs*10)/10,Math.round(tot.fat*10)/10]));
+      sections.push(""); // space between days
+    }
+  }
+  if (!hasFood) sections.push(row(["No nutrition logs yet","","","","","","",""]));
+
+  sections.push("");
+
+  // ── SECTION 5: SUPPLEMENTS ───────────────────────────────────────────────
+  sections.push("SUPPLEMENT LOG");
+  sections.push(row(["Date","Vit D + Zinc + Electrolytes","Whey Post-Workout","Magnesium 21:00","Total Completed"]));
+  var suppDates = Object.keys(data.suppLogs||{}).sort();
+  var hasSupp = false;
+  for (var i=0; i<suppDates.length; i++) {
+    var date = suppDates[i];
+    var sl = data.suppLogs[date] || {};
+    var vitd = sl.vitd ? "✓" : "✗";
+    var whey = sl.whey ? "✓" : "✗";
+    var mag  = sl.mag  ? "✓" : "✗";
+    var total = [sl.vitd,sl.whey,sl.mag].filter(Boolean).length + "/3";
+    hasSupp = true;
+    sections.push(row([date, vitd, whey, mag, total]));
+  }
+  if (!hasSupp) sections.push(row(["No supplement logs yet","","","",""]));
+
+  sections.push("");
+
+  // ── SECTION 6: STRENGTH PROGRESS SUMMARY ────────────────────────────────
+  sections.push("STRENGTH PROGRESS SUMMARY");
+  sections.push(row(["Exercise","Best Weight Ever (kg)","Target (kg)","Progress (%)"]));
+  var strengthTargets = [
+    {name:"Bench Press",  exIds:["bench","bench2"],     target:100},
+    {name:"Pull-ups",     exIds:["pullups"],             target:20, note:"kg added"},
+    {name:"Close-Grip BP",exIds:["cgbp"],               target:75},
+    {name:"EZ Bar Curl",  exIds:["ez_arms","ez_curl"],  target:20, note:"per side"},
+    {name:"OHP (DB)",     exIds:["ohp_db","sohp"],      target:32},
+    {name:"Lat Pulldown", exIds:["latpull"],             target:85},
+    {name:"Squat",        exIds:["squat"],               target:120},
+    {name:"Leg Press",    exIds:["legpress"],            target:160},
+    {name:"Romanian DL",  exIds:["rdl"],                 target:100},
+  ];
+  for (var i=0; i<strengthTargets.length; i++) {
+    var t = strengthTargets[i];
+    var best = 0;
+    var allDates2 = Object.keys(data.sessions||{});
+    for (var j=0; j<allDates2.length; j++) {
+      var s2 = data.sessions[allDates2[j]];
+      if (!s2||!s2.gym||!s2.gym.sets) continue;
+      for (var k=0; k<t.exIds.length; k++) {
+        var w = getBestWeight(s2.gym.sets[t.exIds[k]]);
+        if (w!==null && w>best) best=w;
+      }
+    }
+    var pct = best > 0 ? Math.round((best/t.target)*100)+"%" : "No data";
+    sections.push(row([t.name+(t.note?" ("+t.note+")":""), best>0?best:"—", t.target+(t.note?" "+t.note:""), pct]));
+  }
+
+  // ── ASSEMBLE AND DOWNLOAD ─────────────────────────────────────────────────
+  var csv = sections.join("\n");
+  var BOM = "\uFEFF"; // UTF-8 BOM so Excel opens it correctly with special chars
+  var blob = new Blob([BOM+csv], {type:"text/csv;charset=utf-8;"});
   var url = URL.createObjectURL(blob);
   var a = document.createElement("a");
-  a.href = url; a.download = "training-log.csv"; a.click();
+  a.href = url;
+  a.download = "hakansons-training-"+getTodayKey()+".csv";
+  a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -685,6 +838,16 @@ function HistoryTab(props) {
 }
 
 // ── MACROS TAB ────────────────────────────────────────────────────────────────
+
+// Custom saved products — always appear first in search
+var CUSTOM_PRODUCTS = [
+  { id:"leif_protein", name:"Leif Proteine", brand:"Custom", kcal:300, protein:40, carbs:18, fat:2, per:100, unit:"ml", custom:true },
+  { id:"denner_yogurt", name:"Denner Yogurt 1.5%", brand:"Denner", kcal:44, protein:4.3, carbs:4.8, fat:1.5, per:100, unit:"g", custom:true },
+  { id:"denner_muesli", name:"Denner Muesli", brand:"Denner", kcal:370, protein:9, carbs:65, fat:6, per:100, unit:"g", custom:true },
+  { id:"dried_figs", name:"Dried Figs", brand:"", kcal:249, protein:3.3, carbs:57, fat:0.9, per:100, unit:"g", custom:true },
+  { id:"whey_powder", name:"Whey Protein Powder", brand:"Generic", kcal:400, protein:80, carbs:8, fat:4, per:100, unit:"g", custom:true },
+];
+
 function MacrosTab(props) {
   var data=props.data, setData=props.setData, showFlash=props.showFlash;
   var date = getTodayKey();
@@ -703,17 +866,54 @@ function MacrosTab(props) {
 
   function search() {
     if (!query.trim()) return;
-    setSearching(true); setResults([]); setSelected(null);
-    fetch("https://api.nal.usda.gov/fdc/v1/foods/search?query="+encodeURIComponent(query)+"&pageSize=6&api_key=DEMO_KEY")
+
+    // First check custom products
+    var q = query.toLowerCase();
+    var customMatches = CUSTOM_PRODUCTS.filter(function(p){
+      return p.name.toLowerCase().indexOf(q) > -1 || (p.brand && p.brand.toLowerCase().indexOf(q) > -1);
+    });
+
+    setSearching(true); setResults(customMatches.length ? customMatches : []); setSelected(null);
+
+    // Then search Open Food Facts (European database)
+    fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(query)+"&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,serving_size,serving_quantity")
       .then(function(r){return r.json();})
       .then(function(json){
-        var foods = (json.foods||[]).map(function(f){
-          function get(n){var nu=(f.foodNutrients||[]).find(function(x){return x.nutrientName===n||x.nutrientName&&x.nutrientName.indexOf(n)>-1;});return nu?nu.value:0;}
-          return {id:f.fdcId,name:f.description,brand:f.brandOwner||f.brandName||"",kcal:Math.round(get("Energy")||get("Calories")||0),protein:Math.round((get("Protein")||0)*10)/10,carbs:Math.round((get("Carbohydrate")||0)*10)/10,fat:Math.round((get("Total lipid")||get("Fat")||0)*10)/10,per:f.servingSize||100,unit:f.servingSizeUnit||"g"};
-        });
-        setResults(foods); setSearching(false);
+        var foods = (json.products||[])
+          .filter(function(p){ return p.product_name && p.nutriments; })
+          .map(function(p){
+            var n = p.nutriments||{};
+            // OFF uses _100g suffix for per-100g values
+            var kcal = Math.round(n["energy-kcal_100g"] || n["energy_100g"]/4.184 || 0);
+            var protein = Math.round((n["proteins_100g"]||0)*10)/10;
+            var carbs = Math.round((n["carbohydrates_100g"]||0)*10)/10;
+            var fat = Math.round((n["fat_100g"]||0)*10)/10;
+            return {
+              id: p.code||p.product_name,
+              name: p.product_name,
+              brand: p.brands||"",
+              kcal: kcal,
+              protein: protein,
+              carbs: carbs,
+              fat: fat,
+              per: 100,
+              unit: "g",
+              custom: false,
+            };
+          })
+          .filter(function(p){ return p.kcal > 0; }); // remove entries with no calorie data
+
+        // Merge: custom matches first, then OFF results, dedupe
+        var combined = customMatches.concat(foods).slice(0, 8);
+        setResults(combined);
+        setSearching(false);
       })
-      .catch(function(){showFlash("Search failed — check connection"); setSearching(false);});
+      .catch(function(){
+        // If OFF fails, still show custom matches
+        setResults(customMatches);
+        if (!customMatches.length) showFlash("Search failed — check connection");
+        setSearching(false);
+      });
   }
   function scale(val,per,q){return Math.round((val/(per||100))*parseFloat(q||100)*10)/10;}
   function addFood(food) {
@@ -761,22 +961,35 @@ function MacrosTab(props) {
 
       {view==="search" && (
         <div>
+          <Label>My Saved Products</Label>
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:18}}>
+            {CUSTOM_PRODUCTS.map(function(p){
+              return (
+                <button key={p.id} onClick={function(){setSelected(p);setQty("100");}} style={{padding:"5px 10px",background:"#ede8de",border:"1px solid #c8a898",color:"#8b1a2e",cursor:"pointer",fontSize:10,letterSpacing:"0.1em",fontFamily:"'Cormorant Garamond',serif"}}>
+                  {p.name}
+                </button>
+              );
+            })}
+          </div>
           <div style={{display:"flex",gap:8,marginBottom:12}}>
             <input placeholder="e.g. chicken breast, oats..." value={query} onChange={function(e){setQuery(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")search();}} style={Object.assign({},inp,{flex:1})}/>
             <Btn gold onClick={search}>{searching?"...":"Search"}</Btn>
           </div>
-          {searching && <div style={{fontSize:12,color:"#909080",fontStyle:"italic",textAlign:"center",padding:"16px 0"}}>Searching USDA database...</div>}
+          {searching && <div style={{fontSize:12,color:"#909080",fontStyle:"italic",textAlign:"center",padding:"16px 0"}}>Searching Open Food Facts...</div>}
           {results.length>0 && !selected && (
             <div>
               <div style={{fontSize:10,color:"#909080",letterSpacing:"0.15em",marginBottom:10,textTransform:"uppercase"}}>Select a result</div>
               {results.map(function(food){
                 return (
-                  <button key={food.id} onClick={function(){setSelected(food);}} style={{width:"100%",background:"#ede8de",border:"1px solid #d0cabe",padding:"10px 12px",marginBottom:6,cursor:"pointer",textAlign:"left",fontFamily:"'Cormorant Garamond',serif",display:"flex",justifyContent:"space-between",alignItems:"center"}}
+                  <button key={food.id} onClick={function(){setSelected(food);}} style={{width:"100%",background:food.custom?"#f0ebe0":"#ede8de",border:"1px solid "+(food.custom?"#c8a898":"#d0cabe"),padding:"10px 12px",marginBottom:6,cursor:"pointer",textAlign:"left",fontFamily:"'Cormorant Garamond',serif",display:"flex",justifyContent:"space-between",alignItems:"center"}}
                     onMouseEnter={function(e){e.currentTarget.style.borderColor="#8b1a2e";}}
-                    onMouseLeave={function(e){e.currentTarget.style.borderColor="#d0cabe";}}
+                    onMouseLeave={function(e){e.currentTarget.style.borderColor=food.custom?"#c8a898":"#d0cabe";}}
                   >
                     <div>
-                      <div style={{fontSize:12,color:"#2a2420",marginBottom:2}}>{food.name.length>45?food.name.slice(0,45)+"...":food.name}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
+                        <div style={{fontSize:12,color:"#2a2420"}}>{food.name.length>40?food.name.slice(0,40)+"...":food.name}</div>
+                        {food.custom && <div style={{fontSize:8,background:"#8b1a2e",color:"#f5f0e8",padding:"1px 5px",letterSpacing:"0.1em"}}>SAVED</div>}
+                      </div>
                       {food.brand && <div style={{fontSize:10,color:"#909080"}}>{food.brand}</div>}
                     </div>
                     <div style={{fontSize:10,color:"#8b1a2e",textAlign:"right",minWidth:60}}>
@@ -989,18 +1202,52 @@ function ProgressTab(props) {
       </div>
 
       <Label>Strength Targets</Label>
-      {[{name:"Bench Press",current:50,target:100,unit:"kg"},{name:"Pull-ups",current:0,target:20,unit:"kg added",bw:true},{name:"Close-Grip BP",current:30,target:75,unit:"kg"},{name:"EZ Bar Curl",current:10,target:20,unit:"kg/side"},{name:"OHP (DB)",current:20,target:32,unit:"kg"},{name:"Lat Pulldown",current:40,target:85,unit:"kg"}].map(function(m){
-        var pct = m.bw?0:Math.min(100,(m.current/m.target)*100);
-        return (
-          <div key={m.name} style={{marginBottom:14}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}>
-              <span>{m.name}</span>
-              <span style={{color:"#504e42",fontSize:11}}>{m.bw?"BW":m.current+m.unit} → {m.bw?"BW+"+m.target+"kg":m.target+m.unit}</span>
+      {(function(){
+        // Map each target to the exercise IDs that represent it across sessions
+        var targets = [
+          {name:"Bench Press",  exIds:["bench","bench2","incline_db_b","flat_db"], target:100, unit:"kg",      bw:false},
+          {name:"Pull-ups",     exIds:["pullups"],                                 target:20,  unit:"kg added", bw:true},
+          {name:"Close-Grip BP",exIds:["cgbp"],                                   target:75,  unit:"kg",      bw:false},
+          {name:"EZ Bar Curl",  exIds:["ez_arms","ez_curl"],                       target:20,  unit:"kg/side", bw:false},
+          {name:"OHP (DB)",     exIds:["ohp_db","ohp_db2","sohp"],                 target:32,  unit:"kg",      bw:false},
+          {name:"Lat Pulldown", exIds:["latpull"],                                 target:85,  unit:"kg",      bw:false},
+        ];
+        // Find best ever weight across all sessions for a list of exercise IDs
+        function getBestEver(exIds) {
+          var best = 0;
+          var allDates = Object.keys(data.sessions||{});
+          for (var i=0; i<allDates.length; i++) {
+            var sess = data.sessions[allDates[i]];
+            if (!sess||!sess.gym||!sess.gym.sets) continue;
+            for (var j=0; j<exIds.length; j++) {
+              var w = getBestWeight(sess.gym.sets[exIds[j]]);
+              if (w!==null && w>best) best=w;
+            }
+          }
+          return best;
+        }
+        return targets.map(function(m){
+          var current = getBestEver(m.exIds);
+          var displayCurrent = current > 0 ? current : "—";
+          var pct = (current>0 && !m.bw) ? Math.min(100,(current/m.target)*100) : 0;
+          return (
+            <div key={m.name} style={{marginBottom:16,background:"#ede8de",border:"1px solid #d0cabe",padding:"12px 14px"}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:6}}>
+                <span>{m.name}</span>
+                <span style={{color:"#504e42",fontSize:11}}>
+                  {m.bw?"BW":displayCurrent+(current>0?m.unit:"")} → {m.bw?"BW+"+m.target+"kg":m.target+m.unit}
+                </span>
+              </div>
+              <div style={{height:3,background:"#e0dbd0",marginBottom:4}}>
+                <div style={{height:"100%",width:pct+"%",background:pct>=100?"#3a7a4a":"#8b1a2e",transition:"width 0.5s"}}></div>
+              </div>
+              <div style={{fontSize:9,color:"#a0a090"}}>
+                {current>0 ? (pct>=100?"Target reached!":Math.round(pct)+"% of target") : "No data logged yet"}
+              </div>
             </div>
-            <div style={{height:3,background:"#e0dbd0"}}><div style={{height:"100%",width:pct+"%",background:"#8b1a2e"}}></div></div>
-          </div>
-        );
-      })}
+          );
+        });
+      })()}
 
       <div style={{marginTop:28}}>
         <Label>Milestones</Label>
