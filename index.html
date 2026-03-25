@@ -839,13 +839,75 @@ function HistoryTab(props) {
 
 // ── MACROS TAB ────────────────────────────────────────────────────────────────
 
-// Custom saved products — always appear first in search
-var CUSTOM_PRODUCTS = [
-  { id:"leif_protein", name:"Leif Proteine", brand:"Custom", kcal:300, protein:40, carbs:18, fat:2, per:100, unit:"ml", custom:true },
-  { id:"denner_yogurt", name:"Denner Yogurt 1.5%", brand:"Denner", kcal:44, protein:4.3, carbs:4.8, fat:1.5, per:100, unit:"g", custom:true },
-  { id:"denner_muesli", name:"Denner Muesli", brand:"Denner", kcal:370, protein:9, carbs:65, fat:6, per:100, unit:"g", custom:true },
-  { id:"dried_figs", name:"Dried Figs", brand:"", kcal:249, protein:3.3, carbs:57, fat:0.9, per:100, unit:"g", custom:true },
-  { id:"whey_powder", name:"Whey Protein Powder", brand:"Generic", kcal:400, protein:80, carbs:8, fat:4, per:100, unit:"g", custom:true },
+// ── FOOD DATABASE ─────────────────────────────────────────────────────────────
+// All values per 100g or 100ml. Sources: European food composition tables (EFSA/CIQUAL/BLS)
+var FOOD_DB = [
+  // YOUR CUSTOM PRODUCTS
+  { id:"leif_protein",   name:"Leif Proteine",               brand:"Custom",  kcal:300, protein:40,  carbs:18,  fat:2,   per:100, unit:"ml",  tags:["protein","custom","shake"] },
+  { id:"denner_yogurt",  name:"Denner Yogurt 1.5%",          brand:"Denner",  kcal:44,  protein:4.3, carbs:4.8, fat:1.5, per:100, unit:"g",   tags:["dairy","yogurt","denner","breakfast"] },
+  { id:"denner_muesli",  name:"Denner Muesli",               brand:"Denner",  kcal:370, protein:9,   carbs:65,  fat:6,   per:100, unit:"g",   tags:["muesli","cereal","breakfast","denner"] },
+  { id:"dried_figs",     name:"Dried Figs",                  brand:"",        kcal:249, protein:3.3, carbs:57,  fat:0.9, per:100, unit:"g",   tags:["figs","fruit","dried","snack"] },
+  { id:"whey_powder",    name:"Whey Protein Powder",         brand:"Generic", kcal:400, protein:80,  carbs:8,   fat:4,   per:100, unit:"g",   tags:["whey","protein","powder","supplement"] },
+
+  // EGGS & DAIRY
+  { id:"egg_whole",      name:"Egg (whole)",                 brand:"",        kcal:147, protein:12.6,carbs:0.7, fat:10,  per:100, unit:"g",   tags:["egg","eggs","oeuf","ei"] },
+  { id:"egg_white",      name:"Egg white",                   brand:"",        kcal:52,  protein:10.9,carbs:0.7, fat:0.2, per:100, unit:"g",   tags:["egg","white","blanc","oeuf"] },
+  { id:"milk_whole",     name:"Whole milk",                  brand:"",        kcal:61,  protein:3.2, carbs:4.8, fat:3.3, per:100, unit:"ml",  tags:["milk","lait","milch","dairy"] },
+  { id:"milk_semi",      name:"Semi-skimmed milk",           brand:"",        kcal:46,  protein:3.4, carbs:4.9, fat:1.5, per:100, unit:"ml",  tags:["milk","lait","milch","dairy"] },
+  { id:"greek_yogurt",   name:"Greek yogurt (0%)",           brand:"",        kcal:59,  protein:10,  carbs:3.6, fat:0.4, per:100, unit:"g",   tags:["yogurt","greek","yaourt","dairy"] },
+  { id:"cottage_cheese", name:"Cottage cheese",              brand:"",        kcal:98,  protein:11,  carbs:3.4, fat:4.3, per:100, unit:"g",   tags:["cottage","cheese","fromage","dairy"] },
+  { id:"quark",          name:"Quark (low fat)",             brand:"",        kcal:67,  protein:12,  carbs:4,   fat:0.2, per:100, unit:"g",   tags:["quark","fromage frais","dairy","protein"] },
+  { id:"butter",         name:"Butter",                      brand:"",        kcal:717, protein:0.6, carbs:0.6, fat:81,  per:100, unit:"g",   tags:["butter","beurre","butter","fat"] },
+
+  // MEAT & FISH
+  { id:"chicken_breast", name:"Chicken breast (cooked)",     brand:"",        kcal:165, protein:31,  carbs:0,   fat:3.6, per:100, unit:"g",   tags:["chicken","poulet","hähnchen","viande","meat"] },
+  { id:"chicken_raw",    name:"Chicken breast (raw)",        brand:"",        kcal:120, protein:22,  carbs:0,   fat:2.6, per:100, unit:"g",   tags:["chicken","poulet","hähnchen","raw"] },
+  { id:"beef_mince",     name:"Beef mince (5% fat)",         brand:"",        kcal:137, protein:20,  carbs:0,   fat:6,   per:100, unit:"g",   tags:["beef","boeuf","rind","mince","viande"] },
+  { id:"beef_steak",     name:"Beef steak",                  brand:"",        kcal:198, protein:26,  carbs:0,   fat:10,  per:100, unit:"g",   tags:["beef","steak","boeuf","rind"] },
+  { id:"salmon",         name:"Salmon (cooked)",             brand:"",        kcal:208, protein:20,  carbs:0,   fat:13,  per:100, unit:"g",   tags:["salmon","saumon","lachs","fish","poisson"] },
+  { id:"tuna_tin",       name:"Tuna (tinned in water)",      brand:"",        kcal:109, protein:25,  carbs:0,   fat:1,   per:100, unit:"g",   tags:["tuna","thon","thunfisch","fish","tin"] },
+  { id:"pork_loin",      name:"Pork loin",                   brand:"",        kcal:143, protein:22,  carbs:0,   fat:6,   per:100, unit:"g",   tags:["pork","porc","schwein","meat"] },
+  { id:"turkey",         name:"Turkey breast",               brand:"",        kcal:135, protein:30,  carbs:0,   fat:1,   per:100, unit:"g",   tags:["turkey","dinde","truthahn","meat"] },
+
+  // CARBS & GRAINS
+  { id:"rice_cooked",    name:"White rice (cooked)",         brand:"",        kcal:130, protein:2.7, carbs:28,  fat:0.3, per:100, unit:"g",   tags:["rice","riz","reis","carbs"] },
+  { id:"rice_brown",     name:"Brown rice (cooked)",         brand:"",        kcal:123, protein:2.6, carbs:26,  fat:1,   per:100, unit:"g",   tags:["rice","riz","reis","brown","complet"] },
+  { id:"pasta_cooked",   name:"Pasta (cooked)",              brand:"",        kcal:157, protein:5.8, carbs:31,  fat:0.9, per:100, unit:"g",   tags:["pasta","pâtes","nudeln","spaghetti","carbs"] },
+  { id:"oats",           name:"Oats / Porridge oats",        brand:"",        kcal:379, protein:13,  carbs:66,  fat:7,   per:100, unit:"g",   tags:["oats","avoine","hafer","porridge","breakfast","muesli"] },
+  { id:"bread_white",    name:"White bread",                 brand:"",        kcal:265, protein:9,   carbs:49,  fat:3,   per:100, unit:"g",   tags:["bread","pain","brot","white","toast"] },
+  { id:"bread_whole",    name:"Wholemeal bread",             brand:"",        kcal:247, protein:9,   carbs:41,  fat:3.5, per:100, unit:"g",   tags:["bread","pain","brot","whole","complet"] },
+  { id:"potato",         name:"Potato (boiled)",             brand:"",        kcal:87,  protein:1.9, carbs:20,  fat:0.1, per:100, unit:"g",   tags:["potato","pomme de terre","kartoffel","carbs"] },
+  { id:"sweet_potato",   name:"Sweet potato (baked)",        brand:"",        kcal:90,  protein:2,   carbs:21,  fat:0.1, per:100, unit:"g",   tags:["sweet potato","patate","süsskartoffel"] },
+  { id:"quinoa",         name:"Quinoa (cooked)",             brand:"",        kcal:120, protein:4.4, carbs:22,  fat:1.9, per:100, unit:"g",   tags:["quinoa","carbs","protein"] },
+
+  // VEGETABLES
+  { id:"broccoli",       name:"Broccoli (cooked)",           brand:"",        kcal:35,  protein:2.4, carbs:5,   fat:0.4, per:100, unit:"g",   tags:["broccoli","brocoli","brokkoli","vegetable","légume"] },
+  { id:"spinach",        name:"Spinach (raw)",               brand:"",        kcal:23,  protein:2.9, carbs:1.4, fat:0.4, per:100, unit:"g",   tags:["spinach","épinards","spinat","vegetable"] },
+  { id:"tomato",         name:"Tomato",                      brand:"",        kcal:18,  protein:0.9, carbs:3.5, fat:0.2, per:100, unit:"g",   tags:["tomato","tomate","vegetable"] },
+  { id:"cucumber",       name:"Cucumber",                    brand:"",        kcal:15,  protein:0.6, carbs:2.9, fat:0.1, per:100, unit:"g",   tags:["cucumber","concombre","gurke","vegetable"] },
+  { id:"carrot",         name:"Carrot",                      brand:"",        kcal:41,  protein:0.9, carbs:9,   fat:0.2, per:100, unit:"g",   tags:["carrot","carotte","karotte","vegetable"] },
+
+  // FRUITS
+  { id:"banana",         name:"Banana",                      brand:"",        kcal:89,  protein:1.1, carbs:23,  fat:0.3, per:100, unit:"g",   tags:["banana","banane","fruit"] },
+  { id:"apple",          name:"Apple",                       brand:"",        kcal:52,  protein:0.3, carbs:14,  fat:0.2, per:100, unit:"g",   tags:["apple","pomme","apfel","fruit"] },
+  { id:"orange",         name:"Orange",                      brand:"",        kcal:47,  protein:0.9, carbs:12,  fat:0.1, per:100, unit:"g",   tags:["orange","fruit"] },
+  { id:"berries",        name:"Mixed berries",               brand:"",        kcal:45,  protein:0.8, carbs:10,  fat:0.4, per:100, unit:"g",   tags:["berries","fruits rouges","beeren","fruit"] },
+  { id:"avocado",        name:"Avocado",                     brand:"",        kcal:160, protein:2,   carbs:2,   fat:15,  per:100, unit:"g",   tags:["avocado","avocat","fat","fruit"] },
+
+  // FATS & OILS
+  { id:"olive_oil",      name:"Olive oil",                   brand:"",        kcal:884, protein:0,   carbs:0,   fat:100, per:100, unit:"ml",  tags:["olive oil","huile","olivenöl","fat"] },
+  { id:"almonds",        name:"Almonds",                     brand:"",        kcal:579, protein:21,  carbs:22,  fat:50,  per:100, unit:"g",   tags:["almonds","amandes","mandeln","nuts","snack"] },
+  { id:"peanut_butter",  name:"Peanut butter",               brand:"",        kcal:588, protein:25,  carbs:20,  fat:50,  per:100, unit:"g",   tags:["peanut butter","beurre cacahuète","erdnuss","fat"] },
+
+  // SWISS / EUROPEAN SPECIFIC
+  { id:"birchermuesli",  name:"Bircher Muesli",              brand:"",        kcal:170, protein:5,   carbs:30,  fat:4,   per:100, unit:"g",   tags:["bircher","muesli","swiss","breakfast"] },
+  { id:"gruyere",        name:"Gruyère cheese",              brand:"",        kcal:413, protein:30,  carbs:0.4, fat:32,  per:100, unit:"g",   tags:["gruyere","cheese","fromage","käse","swiss"] },
+  { id:"fondue",         name:"Cheese fondue",               brand:"",        kcal:330, protein:18,  carbs:5,   fat:26,  per:100, unit:"g",   tags:["fondue","cheese","swiss"] },
+  { id:"rosti",          name:"Rösti",                       brand:"",        kcal:175, protein:2.5, carbs:20,  fat:10,  per:100, unit:"g",   tags:["rosti","rösti","potato","swiss"] },
+  { id:"croissant",      name:"Croissant",                   brand:"",        kcal:406, protein:8,   carbs:46,  fat:21,  per:100, unit:"g",   tags:["croissant","pastry","breakfast","french"] },
+  { id:"baguette",       name:"Baguette",                    brand:"",        kcal:270, protein:9,   carbs:56,  fat:1,   per:100, unit:"g",   tags:["baguette","bread","pain","french"] },
+  { id:"lentils",        name:"Lentils (cooked)",            brand:"",        kcal:116, protein:9,   carbs:20,  fat:0.4, per:100, unit:"g",   tags:["lentils","lentilles","linsen","protein","legume"] },
+  { id:"chickpeas",      name:"Chickpeas (cooked)",          brand:"",        kcal:164, protein:8.9, carbs:27,  fat:2.6, per:100, unit:"g",   tags:["chickpeas","pois chiches","kichererbsen","protein"] },
 ];
 
 function MacrosTab(props) {
@@ -864,54 +926,57 @@ function MacrosTab(props) {
     return {kcal:acc.kcal+(f.kcal||0),protein:acc.protein+(f.protein||0),carbs:acc.carbs+(f.carbs||0),fat:acc.fat+(f.fat||0)};
   },{kcal:0,protein:0,carbs:0,fat:0});
 
+  // Custom products (first 5 in FOOD_DB)
+  var CUSTOM_PRODUCTS = FOOD_DB.slice(0,5);
+
   function search() {
     if (!query.trim()) return;
+    var q = query.toLowerCase().trim();
+    setSelected(null);
 
-    // First check custom products
-    var q = query.toLowerCase();
-    var customMatches = CUSTOM_PRODUCTS.filter(function(p){
-      return p.name.toLowerCase().indexOf(q) > -1 || (p.brand && p.brand.toLowerCase().indexOf(q) > -1);
+    // Search local database first — match name, brand, tags
+    var localMatches = FOOD_DB.filter(function(f){
+      if (f.name.toLowerCase().indexOf(q) > -1) return true;
+      if (f.brand && f.brand.toLowerCase().indexOf(q) > -1) return true;
+      if (f.tags && f.tags.some(function(t){ return t.indexOf(q) > -1; })) return true;
+      return false;
     });
 
-    setSearching(true); setResults(customMatches.length ? customMatches : []); setSelected(null);
+    // Show local results immediately — no loading needed
+    if (localMatches.length > 0) {
+      setResults(localMatches.slice(0,8));
+      setSearching(false);
+      return;
+    }
 
-    // Then search Open Food Facts (European database)
-    fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(query)+"&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,serving_size,serving_quantity")
+    // If nothing local, try Open Food Facts for branded products
+    setSearching(true);
+    setResults([]);
+    fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(query)+"&search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments")
       .then(function(r){return r.json();})
       .then(function(json){
         var foods = (json.products||[])
           .filter(function(p){ return p.product_name && p.nutriments; })
           .map(function(p){
             var n = p.nutriments||{};
-            // OFF uses _100g suffix for per-100g values
-            var kcal = Math.round(n["energy-kcal_100g"] || n["energy_100g"]/4.184 || 0);
-            var protein = Math.round((n["proteins_100g"]||0)*10)/10;
-            var carbs = Math.round((n["carbohydrates_100g"]||0)*10)/10;
-            var fat = Math.round((n["fat_100g"]||0)*10)/10;
+            var kcal = Math.round(n["energy-kcal_100g"] || (n["energy_100g"]?n["energy_100g"]/4.184:0) || 0);
             return {
               id: p.code||p.product_name,
               name: p.product_name,
               brand: p.brands||"",
               kcal: kcal,
-              protein: protein,
-              carbs: carbs,
-              fat: fat,
-              per: 100,
-              unit: "g",
-              custom: false,
+              protein: Math.round((n["proteins_100g"]||0)*10)/10,
+              carbs: Math.round((n["carbohydrates_100g"]||0)*10)/10,
+              fat: Math.round((n["fat_100g"]||0)*10)/10,
+              per:100, unit:"g", custom:false,
             };
           })
-          .filter(function(p){ return p.kcal > 0; }); // remove entries with no calorie data
-
-        // Merge: custom matches first, then OFF results, dedupe
-        var combined = customMatches.concat(foods).slice(0, 8);
-        setResults(combined);
+          .filter(function(p){ return p.kcal > 0; });
+        setResults(foods.slice(0,8));
         setSearching(false);
       })
       .catch(function(){
-        // If OFF fails, still show custom matches
-        setResults(customMatches);
-        if (!customMatches.length) showFlash("Search failed — check connection");
+        showFlash("Not found — try Manual Entry");
         setSearching(false);
       });
   }
@@ -963,7 +1028,7 @@ function MacrosTab(props) {
         <div>
           <Label>My Saved Products</Label>
           <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:18}}>
-            {CUSTOM_PRODUCTS.map(function(p){
+            {FOOD_DB.slice(0,5).map(function(p){
               return (
                 <button key={p.id} onClick={function(){setSelected(p);setQty("100");}} style={{padding:"5px 10px",background:"#ede8de",border:"1px solid #c8a898",color:"#8b1a2e",cursor:"pointer",fontSize:10,letterSpacing:"0.1em",fontFamily:"'Cormorant Garamond',serif"}}>
                   {p.name}
@@ -975,20 +1040,23 @@ function MacrosTab(props) {
             <input placeholder="e.g. chicken breast, oats..." value={query} onChange={function(e){setQuery(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")search();}} style={Object.assign({},inp,{flex:1})}/>
             <Btn gold onClick={search}>{searching?"...":"Search"}</Btn>
           </div>
-          {searching && <div style={{fontSize:12,color:"#909080",fontStyle:"italic",textAlign:"center",padding:"16px 0"}}>Searching Open Food Facts...</div>}
+          {searching && <div style={{fontSize:12,color:"#909080",fontStyle:"italic",textAlign:"center",padding:"16px 0"}}>Searching branded products...</div>}
           {results.length>0 && !selected && (
             <div>
               <div style={{fontSize:10,color:"#909080",letterSpacing:"0.15em",marginBottom:10,textTransform:"uppercase"}}>Select a result</div>
               {results.map(function(food){
+                var isCustom = FOOD_DB.slice(0,5).some(function(c){return c.id===food.id;});
+                var isLocal = FOOD_DB.some(function(c){return c.id===food.id;});
                 return (
-                  <button key={food.id} onClick={function(){setSelected(food);}} style={{width:"100%",background:food.custom?"#f0ebe0":"#ede8de",border:"1px solid "+(food.custom?"#c8a898":"#d0cabe"),padding:"10px 12px",marginBottom:6,cursor:"pointer",textAlign:"left",fontFamily:"'Cormorant Garamond',serif",display:"flex",justifyContent:"space-between",alignItems:"center"}}
+                  <button key={food.id} onClick={function(){setSelected(food);}} style={{width:"100%",background:"#ede8de",border:"1px solid "+(isCustom?"#c8a898":"#d0cabe"),padding:"10px 12px",marginBottom:6,cursor:"pointer",textAlign:"left",fontFamily:"'Cormorant Garamond',serif",display:"flex",justifyContent:"space-between",alignItems:"center"}}
                     onMouseEnter={function(e){e.currentTarget.style.borderColor="#8b1a2e";}}
-                    onMouseLeave={function(e){e.currentTarget.style.borderColor=food.custom?"#c8a898":"#d0cabe";}}
+                    onMouseLeave={function(e){e.currentTarget.style.borderColor=isCustom?"#c8a898":"#d0cabe";}}
                   >
                     <div>
                       <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
-                        <div style={{fontSize:12,color:"#2a2420"}}>{food.name.length>40?food.name.slice(0,40)+"...":food.name}</div>
-                        {food.custom && <div style={{fontSize:8,background:"#8b1a2e",color:"#f5f0e8",padding:"1px 5px",letterSpacing:"0.1em"}}>SAVED</div>}
+                        <div style={{fontSize:12,color:"#2a2420"}}>{food.name.length>42?food.name.slice(0,42)+"...":food.name}</div>
+                        {isCustom && <div style={{fontSize:8,background:"#8b1a2e",color:"#f5f0e8",padding:"1px 5px",letterSpacing:"0.1em"}}>MINE</div>}
+                        {isLocal && !isCustom && <div style={{fontSize:8,background:"#4a8a5a",color:"#f5f0e8",padding:"1px 5px",letterSpacing:"0.1em"}}>LOCAL</div>}
                       </div>
                       {food.brand && <div style={{fontSize:10,color:"#909080"}}>{food.brand}</div>}
                     </div>
