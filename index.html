@@ -14,54 +14,47 @@
 
 <style>
 /* ═══════════════════════════════════════════════════════
-   FORM — REDESIGN v2
-   Aesthetic: Bold & Energetic / Light Mode / Gym Poster
-   Typography: Bebas Neue (display) · Archivo (UI) · JetBrains Mono (data)
-   Tokens: Punchy orange (#FF5A1F) on true white · Black ink for weight
-   Inspiration: Gym chalkboard meets editorial fitness magazine
+   FORM — v3 (OCS prep split + sugar tracking)
+   Design untouched from v2 redesign.
    ═══════════════════════════════════════════════════════ */
 
 :root {
-  /* Surface */
   --bg:        #FFFFFF;
-  --bg-2:      #F4F4F2;       /* warm paper */
+  --bg-2:      #F4F4F2;
   --surface:   #FFFFFF;
   --surface-2: #FAFAF8;
-  --ink:       #0A0A0A;       /* near-black */
+  --ink:       #0A0A0A;
   --ink-2:     #2A2A28;
   --ink-3:     #6B6B68;
   --ink-4:     #A8A8A4;
   --line:      #E6E6E2;
   --line-2:    #D0D0CC;
 
-  /* Brand */
-  --orange:    #FF5A1F;       /* primary action */
-  --orange-2:  #FF7A47;       /* lighter shade */
-  --orange-deep:#E8420C;      /* pressed */
+  --orange:    #FF5A1F;
+  --orange-2:  #FF7A47;
+  --orange-deep:#E8420C;
   --orange-tint:rgba(255,90,31,.08);
   --orange-glow:rgba(255,90,31,.25);
 
-  /* Functional */
-  --green:     #00B86B;       /* PRs, completion */
+  --green:     #00B86B;
   --green-tint:rgba(0,184,107,.10);
-  --red:       #E11D2E;       /* alerts */
+  --red:       #E11D2E;
   --red-tint:  rgba(225,29,46,.08);
-  --yellow:    #F0B400;       /* warning */
+  --yellow:    #F0B400;
   --yellow-tint:rgba(240,180,0,.12);
+  --pink:      #EC4899;
+  --pink-tint: rgba(236,72,153,.10);
 
-  /* Shadows — sharper, more directional */
   --shadow-sm: 0 1px 2px rgba(10,10,10,.05), 0 0 0 1px rgba(10,10,10,.04);
   --shadow:    0 2px 4px rgba(10,10,10,.04), 0 0 0 1px rgba(10,10,10,.06);
   --shadow-lg: 0 8px 24px rgba(10,10,10,.08), 0 0 0 1px rgba(10,10,10,.04);
   --shadow-orange: 0 4px 16px rgba(255,90,31,.32);
   --shadow-orange-lg: 0 8px 28px rgba(255,90,31,.42);
 
-  /* Typography */
   --font-display: 'Bebas Neue', 'Impact', sans-serif;
   --font-ui:      'Archivo', -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
-  /* Geometry */
   --r-sm:      6px;
   --r:         10px;
   --r-lg:      14px;
@@ -104,7 +97,6 @@ body {
   min-height:100vh;
   overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
-  /* Subtle paper-grain background */
   background-image:
     radial-gradient(circle at 1px 1px, rgba(10,10,10,.015) 1px, transparent 0);
   background-size: 24px 24px;
@@ -112,7 +104,6 @@ body {
 
 .app { max-width:430px; margin:0 auto; min-height:100vh; position:relative; }
 
-/* ── STATUS BAR ── */
 .sb {
   padding:calc(var(--safe-top) + 10px) 22px 0;
   display:flex; justify-content:space-between; align-items:center;
@@ -129,7 +120,6 @@ body {
   letter-spacing:.12em;
 }
 
-/* ── HEADER ── */
 .hdr {
   padding:18px 22px 8px;
   display:flex; justify-content:space-between; align-items:flex-end;
@@ -166,7 +156,6 @@ body {
   padding-bottom:4px;
 }
 
-/* ── NAV ── */
 .nav {
   position:fixed; bottom:0; left:50%;
   transform:translateX(-50%);
@@ -211,7 +200,6 @@ body {
 }
 .ni:active svg { transform:scale(.92); }
 
-/* ── SCREENS ── */
 .sc {
   display:none;
   padding:14px 22px;
@@ -224,7 +212,6 @@ body {
   to   { opacity:1; transform:translateY(0); }
 }
 
-/* ── SECTION HEADER (poster style) ── */
 .st {
   font-family:var(--font-display);
   font-size:14px;
@@ -242,7 +229,6 @@ body {
 }
 .st:first-child { margin-top:14px; }
 
-/* ── CARDS — sharp edges, real shadow ── */
 .card {
   background:var(--surface);
   border:1.5px solid var(--line);
@@ -261,7 +247,6 @@ body {
   box-shadow:var(--shadow-sm);
 }
 
-/* ── FORM ELEMENTS ── */
 .fl { margin-bottom:14px; }
 .fll {
   font-family:var(--font-display);
@@ -297,7 +282,6 @@ input:focus, select:focus {
 }
 input::placeholder { color:var(--ink-4); }
 
-/* Weight input — chunky, gym-clipboard feel */
 .wi {
   width:84px;
   background:var(--bg-2);
@@ -326,7 +310,6 @@ input::placeholder { color:var(--ink-4); }
   margin-top:4px;
 }
 
-/* ── BUTTONS ── */
 .btn {
   width:100%;
   background:var(--ink);
@@ -413,7 +396,6 @@ input::placeholder { color:var(--ink-4); }
 }
 .btngrn:active { transform:scale(.97); }
 
-/* ── SESSION TYPE PICKER — chunky cards ── */
 .sp {
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -464,7 +446,6 @@ input::placeholder { color:var(--ink-4); }
   text-transform:uppercase;
 }
 
-/* ── DAY PICKER — pills with snap ── */
 .dp {
   display:flex; gap:6px; flex-wrap:wrap;
   margin-bottom:16px;
@@ -502,7 +483,6 @@ input::placeholder { color:var(--ink-4); }
   margin-right:8px;
 }
 
-/* ── EXERCISE ROW ── */
 .exr {
   display:flex; align-items:flex-start; gap:14px;
   padding:18px 0;
@@ -530,7 +510,6 @@ input::placeholder { color:var(--ink-4); }
   font-weight:700;
 }
 
-/* Set bubbles — chunky and satisfying */
 .sets { display:flex; gap:6px; flex-wrap:wrap; margin-top:11px; }
 .bub {
   width:36px; height:36px;
@@ -560,7 +539,6 @@ input::placeholder { color:var(--ink-4); }
   100% { transform:scale(1); }
 }
 
-/* Session footer — total volume */
 .session-footer {
   display:flex;
   justify-content:space-between;
@@ -601,7 +579,6 @@ input::placeholder { color:var(--ink-4); }
   flex-shrink:0;
 }
 
-/* ── STAT TILES ── */
 .sg {
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -658,7 +635,6 @@ input::placeholder { color:var(--ink-4); }
   letter-spacing:.04em;
 }
 
-/* ── CHART CARDS ── */
 .cw {
   background:var(--surface);
   border:1.5px solid var(--line);
@@ -704,24 +680,24 @@ input::placeholder { color:var(--ink-4); }
   letter-spacing:.04em;
 }
 
-/* ── PROGRESS RINGS ── */
-.rrow { display:flex; gap:6px; }
+/* 5-macro rings — slightly smaller to fit 5 across */
+.rrow { display:flex; gap:5px; }
 .rc {
   flex:1;
   background:var(--bg-2);
   border-radius:var(--r);
-  padding:14px 4px;
+  padding:12px 2px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:6px;
+  gap:5px;
   border:1.5px solid var(--line);
 }
 .rl {
   font-family:var(--font-display);
-  font-size:11px;
+  font-size:10px;
   font-weight:400;
-  letter-spacing:.14em;
+  letter-spacing:.12em;
   text-transform:uppercase;
   color:var(--ink-3);
 }
@@ -737,20 +713,19 @@ input::placeholder { color:var(--ink-4); }
 .rv {
   font-family:var(--font-display);
   font-weight:400;
-  font-size:14px;
+  font-size:13px;
   text-anchor:middle;
   dominant-baseline:middle;
   fill:var(--ink);
 }
 .ru {
   font-family:var(--font-mono);
-  font-size:8px;
+  font-size:7px;
   text-anchor:middle;
   fill:var(--ink-3);
   text-transform:uppercase;
 }
 
-/* ── MACRO BARS ── */
 .mbw { margin-bottom:10px; }
 .mbh { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
 .mbn {
@@ -788,12 +763,15 @@ input::placeholder { color:var(--ink-4); }
   background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
   animation: shimmer 2s infinite;
 }
+/* Sugar bar: over-limit treatment */
+.mbf.over { background:var(--red) !important; }
+.mbn.over, .mbv.over { color:var(--red); }
+
 @keyframes shimmer {
   0% { transform:translateX(-100%); }
   100% { transform:translateX(100%); }
 }
 
-/* ── BODY WEIGHT CHART ── */
 .bwc {
   display:flex; align-items:flex-end; gap:5px;
   height:78px; margin-top:14px;
@@ -821,7 +799,6 @@ input::placeholder { color:var(--ink-4); }
   font-weight:500;
 }
 
-/* ── GOALS ── */
 .goal-summary {
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -927,7 +904,6 @@ input::placeholder { color:var(--ink-4); }
   font-weight:500;
 }
 
-/* ── BADGES ── */
 .badge {
   display:inline-flex;
   align-items:center;
@@ -946,7 +922,6 @@ input::placeholder { color:var(--ink-4); }
 .b-r { background:var(--red-tint); color:var(--red); border-color:var(--red); }
 .b-w { background:var(--orange-tint); color:var(--orange-deep); border-color:var(--orange); }
 
-/* ── FOOD SEARCH ── */
 .fsearch { position:relative; margin-bottom:12px; }
 .fres {
   position:absolute;
@@ -984,7 +959,6 @@ input::placeholder { color:var(--ink-4); }
   letter-spacing:.02em;
 }
 
-/* ── TOAST ── */
 .toast {
   position:fixed;
   bottom:110px; left:50%;
@@ -1020,7 +994,6 @@ input::placeholder { color:var(--ink-4); }
   letter-spacing:.06em;
 }
 
-/* ── PR LIST ── */
 .pr-row {
   display:flex; align-items:center; justify-content:space-between;
   padding:14px 0;
@@ -1067,7 +1040,6 @@ input::placeholder { color:var(--ink-4); }
   letter-spacing:.04em;
 }
 
-/* ── DAY OVERVIEW (Goals hero) ── */
 .day-overview {
   background:var(--ink);
   border-radius:var(--r);
@@ -1113,21 +1085,6 @@ input::placeholder { color:var(--ink-4); }
   letter-spacing:.08em;
 }
 
-/* ── DECORATIVE FLOURISH ── */
-.poster-stamp {
-  display:inline-block;
-  font-family:var(--font-display);
-  font-size:10px;
-  letter-spacing:.16em;
-  color:var(--orange);
-  border:1.5px solid var(--orange);
-  padding:3px 8px;
-  text-transform:uppercase;
-  transform:rotate(-2deg);
-  margin-left:6px;
-}
-
-/* Small decorative tag for cards */
 .tag {
   display:inline-block;
   font-family:var(--font-mono);
@@ -1137,6 +1094,32 @@ input::placeholder { color:var(--ink-4); }
   text-transform:uppercase;
   letter-spacing:.06em;
   margin-left:6px;
+}
+
+/* PT CARDIO SESSION STYLING */
+.pt-section {
+  background:var(--surface);
+  border:1.5px solid var(--line);
+  border-radius:var(--r);
+  padding:18px;
+  margin-bottom:10px;
+  box-shadow:var(--shadow-sm);
+}
+.pt-title {
+  font-family:var(--font-display);
+  font-size:18px;
+  font-weight:400;
+  letter-spacing:.04em;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.pt-desc {
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--ink-3);
+  margin-bottom:14px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
 }
 </style>
 </head>
@@ -1153,11 +1136,11 @@ input::placeholder { color:var(--ink-4); }
   <div class="sp">
     <div class="ssb" id="t-gym" onclick="selType('gym')">
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11M6.5 17.5h11M4 12h16"/><circle cx="6.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="6.5" r="1.5"/><circle cx="6.5" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>
-      <div class="ssl">Gym</div><div class="sss">Iron</div>
+      <div class="ssl">Gym</div><div class="sss">Lifting</div>
     </div>
-    <div class="ssb" id="t-swim" onclick="selType('swim')">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0"/><circle cx="12" cy="5" r="2"/></svg>
-      <div class="ssl">Swim</div><div class="sss">Pool · Sauna</div>
+    <div class="ssb" id="t-pt" onclick="selType('pt')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4l-2 8h4l-2 8"/><circle cx="12" cy="12" r="10"/></svg>
+      <div class="ssl">PT / Run</div><div class="sss">Cardio · Core</div>
     </div>
     <div class="ssb" id="t-rest" onclick="selType('rest')">
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
@@ -1171,21 +1154,10 @@ input::placeholder { color:var(--ink-4); }
     <div id="gymarea"></div>
   </div>
 
-  <div id="sec-swim" style="display:none">
-    <div class="st">Swim Session</div>
-    <div class="card">
-      <div class="g2" style="margin-bottom:12px">
-        <div><div class="fll">Duration · Min</div><input type="number" id="sw-dur" placeholder="45" min="0"></div>
-        <div><div class="fll">Laps</div><input type="number" id="sw-laps" placeholder="20" min="0"></div>
-      </div>
-      <div class="g2" style="margin-bottom:14px">
-        <div><div class="fll">Sauna</div><select id="sw-sauna"><option>No</option><option>Yes</option></select></div>
-        <div><div class="fll">Sauna · Min</div><input type="number" id="sw-sdur" placeholder="30" min="0"></div>
-      </div>
-      <div class="fl"><div class="fll">Note</div><input type="text" id="sw-note" placeholder="Optional"></div>
-      <button class="btn btn-orange" onclick="logSwim()">Log Swim Session</button>
-    </div>
-    <div id="swim-hist"></div>
+  <div id="sec-pt" style="display:none">
+    <div class="st">PT Session</div>
+    <div class="dp" id="ptdaypicker"></div>
+    <div id="ptarea"></div>
   </div>
 
   <div id="sec-rest" style="display:none">
@@ -1228,10 +1200,11 @@ input::placeholder { color:var(--ink-4); }
         <div><div class="fll">Calories</div><input type="number" id="fc" placeholder="0" min="0"></div>
         <div><div class="fll">Protein · g</div><input type="number" id="fp" placeholder="0" min="0" step=".1"></div>
       </div>
-      <div class="g2" style="margin-bottom:14px">
+      <div class="g2" style="margin-bottom:10px">
         <div><div class="fll">Carbs · g</div><input type="number" id="fca" placeholder="0" min="0" step=".1"></div>
         <div><div class="fll">Fat · g</div><input type="number" id="ff" placeholder="0" min="0" step=".1"></div>
       </div>
+      <div class="fl"><div class="fll">Sugar · g</div><input type="number" id="fsu" placeholder="0" min="0" step=".1"></div>
       <button class="btn btn-orange" onclick="addManualFood()">Save & Add</button>
     </div>
   </div>
@@ -1255,7 +1228,7 @@ input::placeholder { color:var(--ink-4); }
   <div class="st">Body Weight</div>
   <div class="cw">
     <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:10px">
-      <div style="flex:1"><div class="fll">Log Weight · Kg</div><input type="number" id="bwi" placeholder="75.0" step=".1"></div>
+      <div style="flex:1"><div class="fll">Log Weight · Kg</div><input type="number" id="bwi" placeholder="75.1" step=".1"></div>
       <button class="btngrn" onclick="logWeight()" style="margin-bottom:0;flex-shrink:0">Log</button>
     </div>
     <div class="bwc" id="bwch"></div>
@@ -1292,9 +1265,9 @@ input::placeholder { color:var(--ink-4); }
 
   <div class="st">Profile</div>
   <div class="goal-summary">
-    <div class="gs-tile"><div class="gs-val">75 <span style="font-size:14px;color:var(--ink-3)">kg</span></div><div class="gs-lbl">Current BW</div></div>
+    <div class="gs-tile"><div class="gs-val">75.1 <span style="font-size:14px;color:var(--ink-3)">kg</span></div><div class="gs-lbl">Current BW</div></div>
     <div class="gs-tile"><div class="gs-val">78 <span style="font-size:14px;color:var(--ink-3)">kg</span></div><div class="gs-lbl">Target BW</div></div>
-    <div class="gs-tile"><div class="gs-val">~10<span style="font-size:14px;color:var(--ink-3)">%</span></div><div class="gs-lbl">Body Fat</div></div>
+    <div class="gs-tile"><div class="gs-val">~12.5<span style="font-size:14px;color:var(--ink-3)">%</span></div><div class="gs-lbl">Body Fat</div></div>
   </div>
 
   <div class="st">Select Day</div>
@@ -1332,146 +1305,174 @@ input::placeholder { color:var(--ink-4); }
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   ALL ORIGINAL LOGIC — UNTOUCHED
+   NEW WEEKLY SPLIT — OCS prep + arm growth
    ═══════════════════════════════════════════════════════ */
 
 const T = {
   Push:[
-    {name:'Bench Press',              sets:4, reps:5,  prev:60},
+    {name:'Bench Press',              sets:4, reps:7,  prev:60},
     {name:'Incline DB Press',         sets:3, reps:10, prev:30},
-    {name:'Chest Press (machine)',    sets:3, reps:12, prev:40},
-    {name:'OHP (DB)',                 sets:3, reps:10, prev:12.5},
-    {name:'Tricep Pushdown (rope)',   sets:3, reps:12, prev:40},
+    {name:'Push-ups (max reps)',      sets:3, reps:20, prev:0, bodyweight:true},
+    {name:'OHP',                      sets:4, reps:8,  prev:30},
+    {name:'Tricep Pushdown (rope)',   sets:3, reps:15, prev:45},
+    {name:'Close-Grip Bench Press',   sets:3, reps:8,  prev:50},
   ],
   Pull:[
-    {name:'Pull-ups',                 sets:4, reps:4,  prev:0},
-    {name:'Barbell Row',              sets:3, reps:10, prev:35},
-    {name:'Lat Pulldown',             sets:3, reps:12, prev:40},
-    {name:'DB Curl (standing)',       sets:3, reps:10, prev:14},
-    {name:'Cable Curl (supinated)',   sets:3, reps:12, prev:44},
+    {name:'Pull-ups (max reps)',      sets:4, reps:8,  prev:0, bodyweight:true},
+    {name:'Barbell Row',              sets:4, reps:8,  prev:40},
+    {name:'Seated Cable Row',         sets:3, reps:10, prev:45},
+    {name:'Face Pulls (rope cable)',  sets:3, reps:15, prev:45},
+    {name:'EZ Bar Curl',              sets:3, reps:10, prev:20},
+    {name:'Incline DB Curl',          sets:3, reps:10, prev:17.5},
+    {name:'Hammer Curl',              sets:3, reps:12, prev:14},
   ],
-  Legs:[
-    {name:'Squat',                    sets:4, reps:6,  prev:45},
-    {name:'Leg Press',                sets:4, reps:10, prev:72},
+  'Legs+DL':[
+    {name:'Deadlift',                 sets:4, reps:5,  prev:80, targetMax:91},
     {name:'Romanian DL',              sets:3, reps:10, prev:50},
-    {name:'Leg Curl',                 sets:3, reps:12, prev:47},
-    {name:'Leg Extension',            sets:3, reps:15, prev:0},
+    {name:'Leg Press',                sets:3, reps:12, prev:72},
+    {name:'Lunges (each leg)',        sets:3, reps:12, prev:12},
+    {name:'Calf Raises',              sets:3, reps:20, prev:40},
   ],
   Arms:[
-    {name:'Close-Grip Bench Press',   sets:4, reps:8,  prev:45},
-    {name:'Skull Crushers (EZ bar)',  sets:3, reps:10, prev:9},
-    {name:'Tricep Pushdown (rope)',   sets:3, reps:15, prev:40},
-    {name:'Overhead Tricep Ext.',     sets:3, reps:12, prev:24},
-    {name:'DB Curl (standing)',       sets:4, reps:8,  prev:14},
+    {name:'EZ Bar Curl',              sets:4, reps:8,  prev:20},
     {name:'Incline DB Curl',          sets:3, reps:10, prev:17.5},
-    {name:'Cable Curl (supinated)',   sets:3, reps:12, prev:44},
+    {name:'Cable Curl (supinated)',   sets:3, reps:12, prev:45},
     {name:'Hammer Curl (cable)',      sets:3, reps:12, prev:17.5},
+    {name:'Skull Crushers (EZ bar)',  sets:3, reps:10, prev:10},
+    {name:'Overhead Tricep Ext.',     sets:3, reps:12, prev:25},
+    {name:'Tricep Pushdown (rope)',   sets:3, reps:15, prev:45},
   ],
-  Shoulders:[
-    {name:'Seated DB Overhead Press', sets:4, reps:8,  prev:12.5},
-    {name:'Lateral Raise (DB)',       sets:4, reps:15, prev:9},
-    {name:'Cable Lateral Raise (single)',sets:3,reps:15,prev:15},
-    {name:'Face Pulls (rope cable)',  sets:4, reps:15, prev:45},
-    {name:'Upright Row (cable)',      sets:3, reps:12, prev:45},
-    {name:'DB Shrugs',               sets:3, reps:15, prev:20},
+};
+
+/* PT sessions — cardio + core, logged differently */
+const PT = {
+  'PT Run':[
+    {name:'6× 400m Intervals', desc:'90 sec rest between', field:'time', placeholder:'Log avg pace (mm:ss)'},
+    {name:'Plank', desc:'3 sets — max hold each', field:'time', placeholder:'Log longest hold (mm:ss)'},
+    {name:'Hanging Knee Raises', desc:'3 sets — max reps', field:'reps', placeholder:'Log total reps'},
+  ],
+  'PT Test':[
+    {name:'2-Mile Timed Run', desc:'Target: sub 13:22', field:'time', placeholder:'Time (mm:ss)', target:'13:22'},
+    {name:'Push-ups (2 min max)', desc:'Target: 60 reps', field:'reps', placeholder:'Total reps', target:60},
+    {name:'Pull-ups (max)', desc:'Until failure', field:'reps', placeholder:'Total reps'},
+    {name:'Plank Max Hold', desc:'Target: 3:40', field:'time', placeholder:'Time (mm:ss)', target:'3:40'},
   ],
 };
 
 const GOAL_DATA = {
   'Bench Press':              {target:100,timeline:'12–18 mo',why:'1.3× BW standard for lean intermediate',priority:'HIGH'},
   'Incline DB Press':         {target:40, timeline:'6–9 mo', why:'~65–70% of flat bench, per DB',          priority:'MED'},
-  'Chest Press (machine)':    {target:70, timeline:'4–6 mo', why:'Machine allows more load — aim 70kg',    priority:'MED'},
-  'OHP (DB)':                 {target:22, timeline:'9–12 mo',why:'Strict press at ~30% BW per DB',         priority:'HIGH'},
+  'Push-ups (max reps)':      {target:60, timeline:'OCS test',why:'Target 60 reps in 2 min — ACFT max',    priority:'HIGH'},
+  'OHP':                      {target:55, timeline:'9–12 mo',why:'Strict press at ~70% BW',                priority:'HIGH'},
   'Tricep Pushdown (rope)':   {target:60, timeline:'4–6 mo', why:'Isolation — cable stack 60kg target',    priority:'MED'},
-  'Pull-ups':                 {target:20, timeline:'12–18 mo',why:'BW+20kg = strong intermediate marker',  priority:'HIGH'},
-  'Barbell Row':               {target:80, timeline:'8–12 mo',why:'~80% of bench for balanced back/chest', priority:'HIGH'},
-  'Lat Pulldown':              {target:85, timeline:'8–12 mo',why:'Correlates with pull-up target',        priority:'HIGH'},
-  'DB Curl (standing)':        {target:20, timeline:'6–9 mo', why:'Per DB — full ROM supination target',   priority:'MED'},
-  'Cable Curl (supinated)':    {target:60, timeline:'6–8 mo', why:'Cable stack — consistent tension peak', priority:'MED'},
-  'Squat':                     {target:120,timeline:'18–24 mo',why:'1.5× BW for intermediate lifter',      priority:'HIGH'},
-  'Leg Press':                 {target:160,timeline:'9–12 mo', why:'~2× BW for solid leg base',            priority:'MED'},
-  'Romanian DL':               {target:100,timeline:'10–14 mo',why:'~1.3× BW, posterior chain',            priority:'HIGH'},
-  'Leg Curl':                  {target:70, timeline:'6–9 mo', why:'Isolation — 70kg machine target',       priority:'MED'},
-  'Leg Extension':             {target:70, timeline:'6–9 mo', why:'Isolation — 70kg machine target',       priority:'LOW'},
-  'Close-Grip Bench Press':    {target:75, timeline:'8–10 mo',why:'~75% of flat bench, tricep mass',       priority:'MED'},
-  'Skull Crushers (EZ bar)':   {target:20, timeline:'6–8 mo', why:'Per side — controlled eccentric load',  priority:'MED'},
-  'Overhead Tricep Ext.':      {target:40, timeline:'5–7 mo', why:'Long head isolation — 40kg cable',      priority:'MED'},
-  'Incline DB Curl':           {target:22, timeline:'5–7 mo', why:'Peak stretch — slightly above DB Curl', priority:'MED'},
-  'Hammer Curl (cable)':       {target:25, timeline:'4–6 mo', why:'Brachialis — 25kg per side cable',      priority:'LOW'},
-  'Seated DB Overhead Press':  {target:32, timeline:'12–15 mo',why:'~0.4× BW per DB — strict seated press',priority:'HIGH'},
-  'Lateral Raise (DB)':        {target:16, timeline:'6–9 mo', why:'Medial delt — 16kg DB clean lateral',  priority:'MED'},
-  'Cable Lateral Raise (single)':{target:25,timeline:'5–7 mo',why:'Cable constant tension — 25kg target', priority:'MED'},
-  'Face Pulls (rope cable)':   {target:60, timeline:'4–6 mo', why:'Rear delt / rotator cuff health',       priority:'MED'},
-  'Upright Row (cable)':       {target:55, timeline:'5–7 mo', why:'Upper trap/delt — controlled range',    priority:'LOW'},
-  'DB Shrugs':                 {target:35, timeline:'4–6 mo', why:'Trap isolation — 35kg DB target',       priority:'LOW'},
+  'Close-Grip Bench Press':   {target:75, timeline:'8–10 mo',why:'~75% of flat bench, tricep mass',        priority:'HIGH'},
+  'Pull-ups (max reps)':      {target:20, timeline:'12–18 mo',why:'20 clean reps = strong intermediate',   priority:'HIGH'},
+  'Barbell Row':              {target:80, timeline:'8–12 mo',why:'~80% of bench for balanced back/chest',  priority:'HIGH'},
+  'Seated Cable Row':         {target:70, timeline:'6–9 mo', why:'Mid-back thickness',                     priority:'MED'},
+  'Face Pulls (rope cable)':  {target:60, timeline:'4–6 mo', why:'Rear delt / rotator cuff health',        priority:'MED'},
+  'EZ Bar Curl':              {target:35, timeline:'8–12 mo',why:'Biceps mass — arm growth focus',         priority:'HIGH'},
+  'Incline DB Curl':          {target:22, timeline:'5–7 mo', why:'Peak stretch — slightly above DB Curl',  priority:'MED'},
+  'Hammer Curl':              {target:20, timeline:'6–9 mo', why:'Brachialis + forearm mass',              priority:'MED'},
+  'Deadlift':                 {target:91, timeline:'OCS ACFT',why:'ACFT 3RM max score target',             priority:'HIGH'},
+  'Romanian DL':              {target:100,timeline:'10–14 mo',why:'~1.3× BW, posterior chain',             priority:'HIGH'},
+  'Leg Press':                {target:160,timeline:'9–12 mo', why:'~2× BW for solid leg base',             priority:'MED'},
+  'Lunges (each leg)':        {target:20, timeline:'5–7 mo', why:'Single-leg strength + stability',        priority:'MED'},
+  'Calf Raises':              {target:60, timeline:'4–6 mo', why:'Calf hypertrophy',                       priority:'LOW'},
+  'Cable Curl (supinated)':   {target:60, timeline:'6–8 mo', why:'Cable stack — consistent tension peak',  priority:'MED'},
+  'Hammer Curl (cable)':      {target:25, timeline:'4–6 mo', why:'Brachialis — 25kg per side cable',       priority:'LOW'},
+  'Skull Crushers (EZ bar)':  {target:20, timeline:'6–8 mo', why:'Controlled eccentric load',              priority:'MED'},
+  'Overhead Tricep Ext.':     {target:40, timeline:'5–7 mo', why:'Long head isolation — 40kg cable',       priority:'MED'},
 };
 
-const TARGETS_NUT = {cal:3200,pro:145,carb:380,fat:75};
+/* NEW TARGETS — OCS bulk phase */
+const TARGETS_NUT = {cal:3200, pro:160, carb:370, fat:80, sugar:50};
 
+/* ═══════════════════════════════════════════════════════
+   FOOD DATABASE — EU Ciqual values + sugar (g/100g)
+   Updated: all builtin items now include sugar
+   ═══════════════════════════════════════════════════════ */
 const FOOD_DB_BUILTIN = [
-  {n:'Egg (whole, raw)',cal:147,pro:12.6,carb:0.7,fat:10.6,cat:'Egg'},
-  {n:'Egg white (raw)',cal:52,pro:10.9,carb:0.7,fat:0.2,cat:'Egg'},
-  {n:'Egg yolk (raw)',cal:352,pro:15.9,carb:3.6,fat:30.9,cat:'Egg'},
-  {n:'Chicken breast (raw)',cal:110,pro:23.1,carb:0,fat:1.8,cat:'Meat'},
-  {n:'Chicken breast (grilled)',cal:165,pro:31,carb:0,fat:3.6,cat:'Meat'},
-  {n:'Chicken thigh (raw, skinless)',cal:130,pro:18.5,carb:0,fat:6.2,cat:'Meat'},
-  {n:'Turkey breast (raw)',cal:105,pro:23.2,carb:0,fat:1.0,cat:'Meat'},
-  {n:'Beef mince (5% fat, raw)',cal:137,pro:20,carb:0,fat:6,cat:'Meat'},
-  {n:'Beef mince (10% fat, raw)',cal:175,pro:18.8,carb:0,fat:10.8,cat:'Meat'},
-  {n:'Beef steak (sirloin, raw)',cal:142,pro:21,carb:0,fat:6.3,cat:'Meat'},
-  {n:'Pork tenderloin (raw)',cal:109,pro:20.9,carb:0,fat:2.4,cat:'Meat'},
-  {n:'Pork chop (raw, lean)',cal:143,pro:20.5,carb:0,fat:6.6,cat:'Meat'},
-  {n:'Sausage (pork)',cal:299,pro:11.7,carb:1.0,fat:27.2,cat:'Meat'},
-  {n:'Bacon (grilled)',cal:286,pro:23.8,carb:0,fat:21,cat:'Meat'},
-  {n:'Salmon (raw)',cal:208,pro:20.4,carb:0,fat:13.6,cat:'Fish'},
-  {n:'Salmon (baked)',cal:231,pro:25.4,carb:0,fat:14.5,cat:'Fish'},
-  {n:'Tuna (canned in water)',cal:95,pro:23.0,carb:0,fat:0.8,cat:'Fish'},
-  {n:'Tuna (canned in oil, drained)',cal:189,pro:27.1,carb:0,fat:9.0,cat:'Fish'},
-  {n:'Cod (raw)',cal:82,pro:18,carb:0,fat:0.7,cat:'Fish'},
-  {n:'Mackerel (raw)',cal:205,pro:18.7,carb:0,fat:14.1,cat:'Fish'},
-  {n:'Shrimp (cooked)',cal:99,pro:21,carb:0.9,fat:1.1,cat:'Fish'},
-  {n:'Whole milk (3.5% fat)',cal:64,pro:3.2,carb:4.8,fat:3.6,cat:'Dairy'},
-  {n:'Skimmed milk (0.1%)',cal:35,pro:3.4,carb:4.8,fat:0.1,cat:'Dairy'},
-  {n:'Greek yogurt (0% fat)',cal:59,pro:10.3,carb:3.6,fat:0.4,cat:'Dairy'},
-  {n:'Greek yogurt (2% fat)',cal:73,pro:9.9,carb:3.9,fat:1.9,cat:'Dairy'},
-  {n:'Cottage cheese (low fat)',cal:79,pro:11.1,carb:2.7,fat:2.3,cat:'Dairy'},
-  {n:'Quark (0% fat)',cal:67,pro:12.3,carb:4,fat:0.2,cat:'Dairy'},
-  {n:'Mozzarella (fresh)',cal:253,pro:17.9,carb:2.0,fat:19.5,cat:'Dairy'},
-  {n:'Cheddar cheese',cal:416,pro:25.4,carb:0.4,fat:34.9,cat:'Dairy'},
-  {n:'Butter',cal:734,pro:0.6,carb:0.7,fat:81,cat:'Dairy'},
-  {n:'Whey protein powder (vanilla)',cal:385,pro:77,carb:8,fat:5,cat:'Supplement'},
-  {n:'Leif Proteine shake (100ml)',cal:300,pro:40,carb:18,fat:2,cat:'Supplement'},
-  {n:'White rice (cooked)',cal:130,pro:2.7,carb:28,fat:0.3,cat:'Grain'},
-  {n:'Brown rice (cooked)',cal:111,pro:2.6,carb:23,fat:0.9,cat:'Grain'},
-  {n:'Pasta (cooked, plain)',cal:131,pro:4.5,carb:25.7,fat:1.1,cat:'Grain'},
-  {n:'Oats (dry)',cal:367,pro:12.5,carb:59.8,fat:6.9,cat:'Grain'},
-  {n:'White bread',cal:263,pro:8.4,carb:51.9,fat:1.3,cat:'Grain'},
-  {n:'Wholemeal bread',cal:218,pro:9.4,carb:38.6,fat:2.9,cat:'Grain'},
-  {n:'Sourdough bread',cal:237,pro:8.1,carb:45,fat:1.8,cat:'Grain'},
-  {n:'Rye bread',cal:229,pro:8.1,carb:42,fat:1.7,cat:'Grain'},
-  {n:'Tortilla (wheat)',cal:303,pro:7.9,carb:50.4,fat:7.5,cat:'Grain'},
-  {n:'Quinoa (cooked)',cal:120,pro:4.4,carb:21.3,fat:1.9,cat:'Grain'},
-  {n:'Potatoes (boiled)',cal:80,pro:1.8,carb:17.5,fat:0.1,cat:'Vegetable'},
-  {n:'Sweet potato (cooked)',cal:86,pro:1.6,carb:20.1,fat:0.1,cat:'Vegetable'},
-  {n:'Lentils (cooked)',cal:116,pro:9.0,carb:20.1,fat:0.4,cat:'Legume'},
-  {n:'Chickpeas (cooked)',cal:164,pro:8.9,carb:27.4,fat:2.6,cat:'Legume'},
-  {n:'Black beans (cooked)',cal:132,pro:8.9,carb:23.7,fat:0.5,cat:'Legume'},
-  {n:'Edamame (cooked)',cal:122,pro:11.9,carb:8.9,fat:5.2,cat:'Legume'},
-  {n:'Broccoli (raw)',cal:34,pro:2.8,carb:7,fat:0.4,cat:'Vegetable'},
-  {n:'Spinach (raw)',cal:23,pro:2.9,carb:3.6,fat:0.4,cat:'Vegetable'},
-  {n:'Avocado',cal:167,pro:2.0,carb:8.5,fat:15.3,cat:'Fat'},
-  {n:'Banana',cal:89,pro:1.1,carb:22.8,fat:0.3,cat:'Fruit'},
-  {n:'Apple',cal:52,pro:0.3,carb:13.8,fat:0.2,cat:'Fruit'},
-  {n:'Blueberries',cal:57,pro:0.7,carb:14.5,fat:0.3,cat:'Fruit'},
-  {n:'Strawberries',cal:32,pro:0.7,carb:7.7,fat:0.3,cat:'Fruit'},
-  {n:'Olive oil',cal:899,pro:0,carb:0,fat:99.9,cat:'Fat'},
-  {n:'Almond butter',cal:614,pro:21,carb:18.7,fat:55.5,cat:'Fat'},
-  {n:'Peanut butter (natural)',cal:594,pro:25.1,carb:20,fat:50,cat:'Fat'},
-  {n:'Almonds',cal:597,pro:21,carb:21.6,fat:49.4,cat:'Nut'},
-  {n:'Walnuts',cal:674,pro:15.2,carb:13.7,fat:65.2,cat:'Nut'},
-  {n:'Nutella',cal:544,pro:6.3,carb:57.5,fat:30.9,cat:'Spread'},
-  {n:'Honey',cal:304,pro:0.3,carb:82.4,fat:0,cat:'Spread'},
-  {n:'Protein bar (average)',cal:358,pro:29,carb:39,fat:9,cat:'Supplement'},
+  /* Eggs */
+  {n:'Egg (whole, raw)',cal:147,pro:12.6,carb:0.7,fat:10.6,sugar:0.4,cat:'Egg'},
+  {n:'Egg white (raw)',cal:52,pro:10.9,carb:0.7,fat:0.2,sugar:0.7,cat:'Egg'},
+  {n:'Egg yolk (raw)',cal:352,pro:15.9,carb:3.6,fat:30.9,sugar:0.6,cat:'Egg'},
+  /* Meat */
+  {n:'Chicken breast (raw)',cal:110,pro:23.1,carb:0,fat:1.8,sugar:0,cat:'Meat'},
+  {n:'Chicken breast (grilled)',cal:165,pro:31,carb:0,fat:3.6,sugar:0,cat:'Meat'},
+  {n:'Chicken thigh (raw, skinless)',cal:130,pro:18.5,carb:0,fat:6.2,sugar:0,cat:'Meat'},
+  {n:'Turkey breast (raw)',cal:105,pro:23.2,carb:0,fat:1.0,sugar:0,cat:'Meat'},
+  {n:'Beef mince (5% fat, raw)',cal:137,pro:20,carb:0,fat:6,sugar:0,cat:'Meat'},
+  {n:'Beef mince (10% fat, raw)',cal:175,pro:18.8,carb:0,fat:10.8,sugar:0,cat:'Meat'},
+  {n:'Beef steak (sirloin, raw)',cal:142,pro:21,carb:0,fat:6.3,sugar:0,cat:'Meat'},
+  {n:'Pork tenderloin (raw)',cal:109,pro:20.9,carb:0,fat:2.4,sugar:0,cat:'Meat'},
+  {n:'Pork chop (raw, lean)',cal:143,pro:20.5,carb:0,fat:6.6,sugar:0,cat:'Meat'},
+  {n:'Sausage (pork)',cal:299,pro:11.7,carb:1.0,fat:27.2,sugar:1.0,cat:'Meat'},
+  {n:'Bacon (grilled)',cal:286,pro:23.8,carb:0,fat:21,sugar:0,cat:'Meat'},
+  /* Fish */
+  {n:'Salmon (raw)',cal:208,pro:20.4,carb:0,fat:13.6,sugar:0,cat:'Fish'},
+  {n:'Salmon (baked)',cal:231,pro:25.4,carb:0,fat:14.5,sugar:0,cat:'Fish'},
+  {n:'Tuna (canned in water)',cal:95,pro:23.0,carb:0,fat:0.8,sugar:0,cat:'Fish'},
+  {n:'Tuna (canned in oil, drained)',cal:189,pro:27.1,carb:0,fat:9.0,sugar:0,cat:'Fish'},
+  {n:'Cod (raw)',cal:82,pro:18,carb:0,fat:0.7,sugar:0,cat:'Fish'},
+  {n:'Mackerel (raw)',cal:205,pro:18.7,carb:0,fat:14.1,sugar:0,cat:'Fish'},
+  {n:'Shrimp (cooked)',cal:99,pro:21,carb:0.9,fat:1.1,sugar:0,cat:'Fish'},
+  /* Dairy */
+  {n:'Whole milk (3.5% fat)',cal:64,pro:3.2,carb:4.8,fat:3.6,sugar:4.8,cat:'Dairy'},
+  {n:'Skimmed milk (0.1%)',cal:35,pro:3.4,carb:4.8,fat:0.1,sugar:4.8,cat:'Dairy'},
+  {n:'Greek yogurt (0% fat)',cal:59,pro:10.3,carb:3.6,fat:0.4,sugar:3.6,cat:'Dairy'},
+  {n:'Greek yogurt (2% fat)',cal:73,pro:9.9,carb:3.9,fat:1.9,sugar:3.9,cat:'Dairy'},
+  {n:'Skyr (plain, 0.2% fat)',cal:63,pro:11,carb:4,fat:0.2,sugar:4,cat:'Dairy'},
+  {n:'Cottage cheese (low fat)',cal:79,pro:11.1,carb:2.7,fat:2.3,sugar:2.7,cat:'Dairy'},
+  {n:'Quark (0% fat)',cal:67,pro:12.3,carb:4,fat:0.2,sugar:4,cat:'Dairy'},
+  {n:'Mozzarella (fresh)',cal:253,pro:17.9,carb:2.0,fat:19.5,sugar:1.0,cat:'Dairy'},
+  {n:'Cheddar cheese',cal:416,pro:25.4,carb:0.4,fat:34.9,sugar:0.1,cat:'Dairy'},
+  {n:'Butter',cal:734,pro:0.6,carb:0.7,fat:81,sugar:0.7,cat:'Dairy'},
+  /* Supplements / protein */
+  {n:'Whey protein powder (vanilla)',cal:385,pro:77,carb:8,fat:5,sugar:4,cat:'Supplement'},
+  {n:'Leif Proteine shake (100ml)',cal:300,pro:40,carb:18,fat:2,sugar:8,cat:'Supplement'},
+  {n:'Milk protein (100g)',cal:50,pro:7.3,carb:4,fat:0,sugar:4,cat:'Supplement'},
+  {n:'Protein bar (average)',cal:358,pro:29,carb:39,fat:9,sugar:18,cat:'Supplement'},
+  /* Grains */
+  {n:'White rice (cooked)',cal:130,pro:2.7,carb:28,fat:0.3,sugar:0.1,cat:'Grain'},
+  {n:'Brown rice (cooked)',cal:111,pro:2.6,carb:23,fat:0.9,sugar:0.4,cat:'Grain'},
+  {n:'Pasta (cooked, plain)',cal:131,pro:4.5,carb:25.7,fat:1.1,sugar:0.6,cat:'Grain'},
+  {n:'Spaghetti (cooked)',cal:158,pro:5.8,carb:31,fat:0.9,sugar:0.8,cat:'Grain'},
+  {n:'Oats (dry)',cal:367,pro:12.5,carb:59.8,fat:6.9,sugar:1.1,cat:'Grain'},
+  {n:'Muesli (plain)',cal:352,pro:9.7,carb:66,fat:5.9,sugar:17,cat:'Grain'},
+  {n:'White bread',cal:263,pro:8.4,carb:51.9,fat:1.3,sugar:4.5,cat:'Grain'},
+  {n:'Wholemeal bread',cal:218,pro:9.4,carb:38.6,fat:2.9,sugar:3.5,cat:'Grain'},
+  {n:'Sourdough bread',cal:237,pro:8.1,carb:45,fat:1.8,sugar:2.5,cat:'Grain'},
+  {n:'Rye bread',cal:229,pro:8.1,carb:42,fat:1.7,sugar:3.2,cat:'Grain'},
+  {n:'Tortilla (wheat)',cal:303,pro:7.9,carb:50.4,fat:7.5,sugar:2.8,cat:'Grain'},
+  {n:'Quinoa (cooked)',cal:120,pro:4.4,carb:21.3,fat:1.9,sugar:0.9,cat:'Grain'},
+  /* Veg / starchy */
+  {n:'Potatoes (boiled)',cal:80,pro:1.8,carb:17.5,fat:0.1,sugar:0.8,cat:'Vegetable'},
+  {n:'Sweet potato (cooked)',cal:86,pro:1.6,carb:20.1,fat:0.1,sugar:4.2,cat:'Vegetable'},
+  {n:'Broccoli (raw)',cal:34,pro:2.8,carb:7,fat:0.4,sugar:1.7,cat:'Vegetable'},
+  {n:'Spinach (raw)',cal:23,pro:2.9,carb:3.6,fat:0.4,sugar:0.4,cat:'Vegetable'},
+  /* Legumes */
+  {n:'Lentils (cooked)',cal:116,pro:9.0,carb:20.1,fat:0.4,sugar:1.8,cat:'Legume'},
+  {n:'Chickpeas (cooked)',cal:164,pro:8.9,carb:27.4,fat:2.6,sugar:4.8,cat:'Legume'},
+  {n:'Black beans (cooked)',cal:132,pro:8.9,carb:23.7,fat:0.5,sugar:0.3,cat:'Legume'},
+  {n:'Edamame (cooked)',cal:122,pro:11.9,carb:8.9,fat:5.2,sugar:2.2,cat:'Legume'},
+  /* Fruit */
+  {n:'Avocado',cal:167,pro:2.0,carb:8.5,fat:15.3,sugar:0.7,cat:'Fat'},
+  {n:'Banana',cal:89,pro:1.1,carb:22.8,fat:0.3,sugar:12.2,cat:'Fruit'},
+  {n:'Apple',cal:52,pro:0.3,carb:13.8,fat:0.2,sugar:10.4,cat:'Fruit'},
+  {n:'Blueberries',cal:57,pro:0.7,carb:14.5,fat:0.3,sugar:10,cat:'Fruit'},
+  {n:'Strawberries',cal:32,pro:0.7,carb:7.7,fat:0.3,sugar:4.9,cat:'Fruit'},
+  /* Fats / nuts */
+  {n:'Olive oil',cal:899,pro:0,carb:0,fat:99.9,sugar:0,cat:'Fat'},
+  {n:'Almond butter',cal:614,pro:21,carb:18.7,fat:55.5,sugar:4.4,cat:'Fat'},
+  {n:'Peanut butter (natural)',cal:594,pro:25.1,carb:20,fat:50,sugar:9,cat:'Fat'},
+  {n:'Almonds',cal:597,pro:21,carb:21.6,fat:49.4,sugar:4.4,cat:'Nut'},
+  {n:'Walnuts',cal:674,pro:15.2,carb:13.7,fat:65.2,sugar:2.6,cat:'Nut'},
+  /* Spreads / treats (your logged custom foods, normalized /100g) */
+  {n:'Nutella',cal:544,pro:6.3,carb:57.5,fat:30.9,sugar:56.3,cat:'Spread'},
+  {n:'Honey',cal:304,pro:0.3,carb:82.4,fat:0,sugar:82.1,cat:'Spread'},
+  {n:'Cookie',cal:480,pro:8,carb:64,fat:48,sugar:30,cat:'Treat'},
+  {n:'Cake',cal:371,pro:0,carb:83,fat:6.1,sugar:50,cat:'Treat'},
+  {n:'Magnum (1 bar)',cal:272,pro:3.6,carb:26,fat:16.8,sugar:22,cat:'Treat'},
 ];
 
 const td  = ()=> new Date().toISOString().slice(0,10);
@@ -1483,39 +1484,32 @@ const gN  = ()=> ld('nt_v3',[]);
 const sN  = d  => sv('nt_v3',d);
 const gBW = ()=> ld('bw',[]);
 const sBW = d  => sv('bw',d);
+const gPT = ()=> ld('pt_v1',[]);
+const sPT = d  => sv('pt_v1',d);
 const gCustomFoods = ()=> ld('custom_foods',[]);
 const sCustomFoods = d  => sv('custom_foods',d);
 const getFoodDB = ()=> [...FOOD_DB_BUILTIN, ...gCustomFoods()];
 
 function seed(){
-  if(ld('sd4',false)) return;
+  if(ld('sd5',false)) return;
   sW([
     {date:'2026-03-25',session:'Arms',exercise:'Close-Grip Bench Press',sets:4,reps:8,weight:45},
     {date:'2026-03-25',session:'Arms',exercise:'Skull Crushers (EZ bar)',sets:3,reps:10,weight:9},
     {date:'2026-03-25',session:'Arms',exercise:'Tricep Pushdown (rope)',sets:3,reps:15,weight:40},
     {date:'2026-03-25',session:'Arms',exercise:'Overhead Tricep Ext.',sets:3,reps:12,weight:24},
-    {date:'2026-03-25',session:'Arms',exercise:'DB Curl (standing)',sets:4,reps:8,weight:14},
     {date:'2026-03-25',session:'Arms',exercise:'Incline DB Curl',sets:3,reps:10,weight:17.5},
     {date:'2026-03-25',session:'Arms',exercise:'Cable Curl (supinated)',sets:3,reps:12,weight:44},
     {date:'2026-03-25',session:'Arms',exercise:'Hammer Curl (cable)',sets:3,reps:12,weight:17.5},
-    {date:'2026-03-27',session:'Shoulders',exercise:'Seated DB Overhead Press',sets:4,reps:8,weight:12.5},
-    {date:'2026-03-27',session:'Shoulders',exercise:'Lateral Raise (DB)',sets:4,reps:15,weight:9},
-    {date:'2026-03-27',session:'Shoulders',exercise:'Cable Lateral Raise (single)',sets:3,reps:15,weight:15},
-    {date:'2026-03-27',session:'Shoulders',exercise:'Face Pulls (rope cable)',sets:4,reps:15,weight:45},
-    {date:'2026-03-27',session:'Shoulders',exercise:'Upright Row (cable)',sets:3,reps:12,weight:45},
-    {date:'2026-03-27',session:'Shoulders',exercise:'DB Shrugs',sets:3,reps:15,weight:20},
+    {date:'2026-04-20',session:'Arms',exercise:'Close-Grip Bench Press',sets:4,reps:8,weight:50},
+    {date:'2026-04-20',session:'Arms',exercise:'Skull Crushers (EZ bar)',sets:3,reps:10,weight:10},
+    {date:'2026-04-20',session:'Arms',exercise:'Tricep Pushdown (rope)',sets:3,reps:15,weight:45},
+    {date:'2026-04-20',session:'Arms',exercise:'Overhead Tricep Ext.',sets:3,reps:12,weight:25},
+    {date:'2026-04-20',session:'Arms',exercise:'Incline DB Curl',sets:3,reps:10,weight:17.5},
+    {date:'2026-04-20',session:'Arms',exercise:'Cable Curl (supinated)',sets:3,reps:12,weight:45},
+    {date:'2026-04-20',session:'Arms',exercise:'Hammer Curl (cable)',sets:3,reps:12,weight:17.5},
   ]);
-  sN([
-    {date:'2026-03-25',name:'Egg (whole, raw)',cal:294,pro:25.2,carb:1.4,fat:20},
-    {date:'2026-03-25',name:'Banana',cal:89,pro:1.1,carb:23,fat:0.3},
-    {date:'2026-03-25',name:'Wholemeal bread',cal:247,pro:9,carb:41,fat:3.5},
-    {date:'2026-03-25',name:'Peanut butter (natural)',cal:88,pro:3.8,carb:3,fat:7.5},
-    {date:'2026-03-25',name:'White rice (cooked)',cal:260,pro:5.4,carb:56,fat:0.6},
-    {date:'2026-03-25',name:'Beef mince (5% fat, raw)',cal:205,pro:30,carb:0,fat:9},
-    {date:'2026-03-25',name:'Leif Proteine shake (100ml)',cal:300,pro:40,carb:18,fat:2},
-  ]);
-  sBW([{date:'2026-03-25',weight:74.9},{date:'2026-03-27',weight:75.1}]);
-  sv('sd4',true);
+  sBW([{date:'2026-04-22',weight:75.1}]);
+  sv('sd5',true);
 }
 
 function updateDate(){
@@ -1541,16 +1535,16 @@ function goSc(n,el){
   if(n==='goals')  renGoalsPicker();
 }
 
-let aType=null, aTrainDay=null;
+let aType=null, aTrainDay=null, aPTDay=null;
 
 function selType(t){
   aType=t;
-  ['gym','swim','rest'].forEach(x=>{
+  ['gym','pt','rest'].forEach(x=>{
     document.getElementById('t-'+x).classList.toggle('active',x===t);
     document.getElementById('sec-'+x).style.display=x===t?'block':'none';
   });
-  if(t==='gym')  renTrainDP();
-  if(t==='swim') renSwimHist();
+  if(t==='gym') renTrainDP();
+  if(t==='pt')  renPTDP();
 }
 
 function renTrainDP(){
@@ -1558,8 +1552,15 @@ function renTrainDP(){
     `<div class="dpl${aTrainDay===d?' active':''}" onclick="selTrainDay('${d}')">${d}</div>`
   ).join('');
 }
-
 function selTrainDay(d){ aTrainDay=d; renTrainDP(); renGym(d); }
+
+function renPTDP(){
+  document.getElementById('ptdaypicker').innerHTML=Object.keys(PT).map(d=>
+    `<div class="dpl${aPTDay===d?' active':''}" onclick="selPTDay('${d}')">${d}</div>`
+  ).join('');
+  if(aPTDay) renPT(aPTDay);
+}
+function selPTDay(d){ aPTDay=d; renPTDP(); renPT(d); }
 
 function renGym(day){
   const exs=T[day];
@@ -1570,16 +1571,17 @@ function renGym(day){
     const w = ss[i+'_w'] !== undefined ? ss[i+'_w'] : ex.prev;
     const done = ss[i+'_d'] || 0;
     const vol = (done * ex.reps * w).toFixed(0);
+    const isBW = ex.bodyweight;
     h+=`<div class="exr">
       <div style="flex:1;min-width:0">
         <div class="exn">${ex.name}</div>
-        <div class="exp">${ex.sets}×${ex.reps} · prev ${ex.prev>0?ex.prev+' kg':'BW'} · vol <span class="vol">${vol} kg</span></div>
+        <div class="exp">${ex.sets}×${ex.reps} · prev ${ex.prev>0?ex.prev+' kg':'BW'}${!isBW?' · vol <span class="vol">'+vol+' kg</span>':''}</div>
         <div class="sets">`;
     for(let s=0;s<ex.sets;s++)
       h+=`<div class="bub${s<done?' done':''}" onclick="togSet('${day}',${i},${s},this)">${s+1}</div>`;
     h+=`</div></div>
       <div style="text-align:right;flex-shrink:0">
-        <div class="wlb">kg</div>
+        <div class="wlb">${isBW?'+kg':'kg'}</div>
         <input class="wi" type="number" value="${w}" step=".5" min="0" inputmode="decimal"
           onchange="savW('${day}',${i},this.value)">
       </div></div>`;
@@ -1597,6 +1599,43 @@ function renGym(day){
     <button class="btn btn-orange" onclick="logGym('${day}')">Log ${day}</button>
   </div></div>`;
   document.getElementById('gymarea').innerHTML=h;
+}
+
+function renPT(day){
+  const items=PT[day];
+  const stateKey='pt_'+td()+'_'+day;
+  const ss=ld(stateKey,{});
+  let h='<div class="card">';
+  items.forEach((it,i)=>{
+    const val = ss[i] || '';
+    h+=`<div class="pt-section">
+      <div class="pt-title">${it.name}</div>
+      <div class="pt-desc">${it.desc}${it.target?' · Target: '+it.target:''}</div>
+      <input type="text" placeholder="${it.placeholder}" value="${val}" onchange="savPT('${day}',${i},this.value)">
+    </div>`;
+  });
+  h+=`<button class="btn btn-orange" style="margin-top:10px" onclick="logPT('${day}')">Log ${day}</button></div>`;
+  document.getElementById('ptarea').innerHTML=h;
+}
+
+function savPT(day,i,val){
+  const stateKey='pt_'+td()+'_'+day;
+  const ss=ld(stateKey,{});
+  ss[i]=val;
+  sv(stateKey,ss);
+}
+
+function logPT(day){
+  const items=PT[day];
+  const stateKey='pt_'+td()+'_'+day;
+  const ss=ld(stateKey,{});
+  const all=gPT();
+  const entry={date:td(),session:day,data:items.map((it,i)=>({name:it.name,value:ss[i]||''}))};
+  // remove any existing today entry for this day-type
+  const filtered=all.filter(x=>!(x.date===td()&&x.session===day));
+  filtered.push(entry);
+  sPT(filtered);
+  toast(day+' logged ✓');
 }
 
 function togSet(day,ei,si,el){
@@ -1634,29 +1673,6 @@ function logGym(day){
   renGym(day);
 }
 
-function logSwim(){
-  const dur=parseInt(document.getElementById('sw-dur').value)||0;
-  const laps=parseInt(document.getElementById('sw-laps').value)||0;
-  const sauna=document.getElementById('sw-sauna').value;
-  const sdur=parseInt(document.getElementById('sw-sdur').value)||0;
-  const note=document.getElementById('sw-note').value;
-  const sw=ld('sw',[]);sw.push({date:td(),dur,laps,sauna,sdur,note});sv('sw',sw);
-  ['sw-dur','sw-laps','sw-sdur','sw-note'].forEach(id=>document.getElementById(id).value='');
-  renSwimHist();toast('Swim logged ✓');
-}
-
-function renSwimHist(){
-  const sw=ld('sw',[{date:'2026-03-26',dur:0,laps:0,sauna:'Yes',sdur:60,note:''},{date:'2026-03-28',dur:0,laps:0,sauna:'Yes',sdur:35,note:''}]);
-  document.getElementById('swim-hist').innerHTML=!sw.length?'':
-    '<div class="st">History</div>'+
-    sw.slice().reverse().map(s=>`<div class="csm">
-      <div style="font-family:var(--font-display);font-size:18px;font-weight:400;color:var(--ink);letter-spacing:.02em">${s.date}</div>
-      <div style="font-family:var(--font-mono);font-size:12px;color:var(--ink-3);margin-top:4px;letter-spacing:.02em">
-        ${s.dur>0?s.dur+'min · ':''}${s.laps>0?s.laps+' laps · ':''}${s.sauna==='Yes'?'Sauna '+s.sdur+'min':'No sauna'}
-        ${s.note?' · '+s.note:''}
-      </div></div>`).join('');
-}
-
 function logRest(){const r=ld('rsts',[]);if(!r.includes(td()))r.push(td());sv('rsts',r);toast('Rest day confirmed ✓');}
 
 let selFood=null;
@@ -1668,7 +1684,7 @@ function searchFood(q){
   if(!hits.length){res.classList.remove('show');return;}
   res.innerHTML=hits.map((f)=>`<div class="fri" onclick="pickFood(${db.indexOf(f)})">
     <div class="fri-name">${f.n}${f.custom?'<span class="tag">custom</span>':''}</div>
-    <div class="fri-mac">${f.cal} kcal · ${f.pro}g P · ${f.carb}g C · ${f.fat}g F /100g</div>
+    <div class="fri-mac">${f.cal} kcal · ${f.pro}g P · ${f.carb}g C · ${f.fat}g F · ${f.sugar||0}g Sug /100g</div>
   </div>`).join('');
   res.classList.add('show');
 }
@@ -1688,18 +1704,28 @@ function pickFood(idx){
 function updateSelFood(){
   if(!selFood)return;
   const qty=parseFloat(document.getElementById('fqty').value)||100,m=qty/100;
+  const sug = selFood.sugar || 0;
   document.getElementById('sel-food-macros').innerHTML=
     `Calories: <strong style="color:var(--ink);font-family:var(--font-display);font-size:18px;font-weight:400;letter-spacing:.02em">${(selFood.cal*m).toFixed(0)} kcal</strong><br>`+
     `Protein: <strong style="color:var(--green)">${(selFood.pro*m).toFixed(1)}g</strong> &nbsp;·&nbsp; `+
     `Carbs: <strong style="color:var(--orange)">${(selFood.carb*m).toFixed(1)}g</strong> &nbsp;·&nbsp; `+
-    `Fat: <strong style="color:var(--ink-2)">${(selFood.fat*m).toFixed(1)}g</strong>`;
+    `Fat: <strong style="color:var(--ink-2)">${(selFood.fat*m).toFixed(1)}g</strong><br>`+
+    `Sugar: <strong style="color:var(--pink);font-family:var(--font-mono)">${(sug*m).toFixed(1)}g</strong>`;
 }
 
 function addSelFood(){
   if(!selFood){toast('Select a food first');return;}
   const qty=parseFloat(document.getElementById('fqty').value)||100,m=qty/100;
   const d=gN();
-  d.push({date:td(),name:selFood.n+(qty!==100?' ('+qty+'g)':''),cal:Math.round(selFood.cal*m),pro:+(selFood.pro*m).toFixed(1),carb:+(selFood.carb*m).toFixed(1),fat:+(selFood.fat*m).toFixed(1)});
+  d.push({
+    date:td(),
+    name:selFood.n+(qty!==100?' ('+qty+'g)':''),
+    cal:Math.round(selFood.cal*m),
+    pro:+(selFood.pro*m).toFixed(1),
+    carb:+(selFood.carb*m).toFixed(1),
+    fat:+(selFood.fat*m).toFixed(1),
+    sugar:+((selFood.sugar||0)*m).toFixed(1)
+  });
   sN(d);
   document.getElementById('fsq').value='';
   document.getElementById('fqty').value='';
@@ -1714,18 +1740,20 @@ function addManualFood(){
   const pro=parseFloat(document.getElementById('fp').value)||0;
   const carb=parseFloat(document.getElementById('fca').value)||0;
   const fat=parseFloat(document.getElementById('ff').value)||0;
+  const sugar=parseFloat(document.getElementById('fsu').value)||0;
 
+  /* Save to custom DB so it appears in future searches */
   const customs=gCustomFoods();
   const existing=customs.findIndex(f=>f.n.toLowerCase()===name.toLowerCase());
-  const newItem={n:name,cal,pro,carb,fat,cat:'Custom',custom:true};
+  const newItem={n:name,cal,pro,carb,fat,sugar,cat:'Custom',custom:true};
   if(existing>=0) customs[existing]=newItem;
   else customs.push(newItem);
   sCustomFoods(customs);
 
   const d=gN();
-  d.push({date:td(),name,cal,pro,carb,fat});
+  d.push({date:td(),name,cal,pro,carb,fat,sugar});
   sN(d);
-  ['fn','fc','fp','fca','ff'].forEach(id=>document.getElementById(id).value='');
+  ['fn','fc','fp','fca','ff','fsu'].forEach(id=>document.getElementById(id).value='');
   renNut();toast('Saved — '+name+' ✓');
 }
 
@@ -1735,32 +1763,48 @@ document.addEventListener('click',e=>{
 
 function renNut(){
   const d=gN().filter(f=>f.date===td());
-  const tot=d.reduce((a,f)=>({cal:a.cal+f.cal,pro:a.pro+f.pro,carb:a.carb+f.carb,fat:a.fat+f.fat}),{cal:0,pro:0,carb:0,fat:0});
-  const r=26,c=2*Math.PI*r;
-  const m4=[
+  const tot=d.reduce((a,f)=>({
+    cal:a.cal+f.cal,
+    pro:a.pro+f.pro,
+    carb:a.carb+f.carb,
+    fat:a.fat+f.fat,
+    sugar:a.sugar+(f.sugar||0)
+  }),{cal:0,pro:0,carb:0,fat:0,sugar:0});
+
+  const r=22,c=2*Math.PI*r;
+  const m5=[
     {l:'KCAL',v:tot.cal,t:TARGETS_NUT.cal,u:'kcal',col:'#FF5A1F'},
     {l:'PRO',v:tot.pro,t:TARGETS_NUT.pro,u:'g',col:'#00B86B'},
     {l:'CARB',v:tot.carb,t:TARGETS_NUT.carb,u:'g',col:'#F0B400'},
     {l:'FAT',v:tot.fat,t:TARGETS_NUT.fat,u:'g',col:'#0A0A0A'},
+    {l:'SUG',v:tot.sugar,t:TARGETS_NUT.sugar,u:'g',col:'#EC4899',cap:true}, // cap=true means this is an upper limit
   ];
-  document.getElementById('mrings').innerHTML=m4.map(m=>{
-    const p=Math.min(m.v/m.t,1),off=c*(1-p);
+  document.getElementById('mrings').innerHTML=m5.map(m=>{
+    const p=Math.min(m.v/m.t,1);
+    const off=c*(1-p);
+    // For sugar: if over limit, ring goes red
+    const ringCol = m.cap && m.v > m.t ? '#E11D2E' : m.col;
     return `<div class="rc">
       <div class="rl">${m.l}</div>
-      <svg width="68" height="68" viewBox="0 0 68 68">
-        <circle class="rtr" cx="34" cy="34" r="${r}"/>
-        <circle class="rfi" cx="34" cy="34" r="${r}" stroke="${m.col}" stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
-        <text class="rv" x="34" y="34">${Math.round(m.v)}</text>
-        <text class="ru" x="34" y="46">${m.u}</text>
+      <svg width="58" height="58" viewBox="0 0 58 58">
+        <circle class="rtr" cx="29" cy="29" r="${r}"/>
+        <circle class="rfi" cx="29" cy="29" r="${r}" stroke="${ringCol}" stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
+        <text class="rv" x="29" y="29">${Math.round(m.v)}</text>
+        <text class="ru" x="29" y="40">${m.u}</text>
       </svg></div>`;
   }).join('');
-  document.getElementById('mbars').innerHTML=m4.map(m=>{
+  document.getElementById('mbars').innerHTML=m5.map(m=>{
     const p=Math.min((m.v/m.t)*100,100).toFixed(0);
+    const isOver = m.cap && m.v > m.t;
     return `<div class="mbw">
-      <div class="mbh"><span class="mbn">${m.l}</span><span class="mbv">${Math.round(m.v)} / ${m.t} ${m.u}</span></div>
-      <div class="mbt"><div class="mbf" style="width:${p}%;background:${m.col}"></div></div>
+      <div class="mbh">
+        <span class="mbn${isOver?' over':''}">${m.l}${m.cap?' (max)':''}</span>
+        <span class="mbv${isOver?' over':''}">${Math.round(m.v*10)/10} / ${m.t} ${m.u}</span>
+      </div>
+      <div class="mbt"><div class="mbf${isOver?' over':''}" style="width:${p}%;background:${isOver?'var(--red)':m.col}"></div></div>
     </div>`;
   }).join('');
+
   const el=document.getElementById('foodlist');
   if(!d.length){el.innerHTML='<div class="empty">Nothing logged today</div>';return;}
   el.innerHTML=d.map((f,i)=>`<div class="csm" style="display:flex;align-items:center;gap:12px">
@@ -1768,7 +1812,7 @@ function renNut(){
       <div style="font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--ink)">${f.name}</div>
       <div style="font-family:var(--font-mono);font-size:12px;color:var(--ink-3);margin-top:4px">
         <span style="color:var(--orange);font-weight:700">${f.cal} kcal</span>
-        · ${f.pro}g P · ${f.carb}g C · ${f.fat}g F
+        · ${f.pro}g P · ${f.carb}g C · ${f.fat}g F${f.sugar?' · <span style="color:var(--pink)">'+f.sugar+'g Sug</span>':''}
       </div>
     </div>
     <button class="btni" onclick="delFood(${i})">×</button>
@@ -1787,7 +1831,6 @@ function last7(){
   for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);d.push(x.toISOString().slice(0,10));}
   return d;
 }
-
 function last30(){
   const d=[];
   for(let i=29;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);d.push(x.toISOString().slice(0,10));}
@@ -2007,8 +2050,8 @@ function expCSV(type){
     gW().forEach(w=>csv+=`${w.date},${w.session},${w.exercise},${w.sets},${w.reps},${w.weight},${w.sets*w.reps*w.weight}\n`);
     fn='form_workout.csv';
   } else if(type==='nutrition'){
-    csv='Date,Food,Calories,Protein (g),Carbs (g),Fat (g)\n';
-    gN().forEach(f=>csv+=`${f.date},"${f.name}",${f.cal},${f.pro},${f.carb},${f.fat}\n`);
+    csv='Date,Food,Calories,Protein (g),Carbs (g),Fat (g),Sugar (g)\n';
+    gN().forEach(f=>csv+=`${f.date},"${f.name}",${f.cal},${f.pro},${f.carb},${f.fat},${f.sugar||0}\n`);
     fn='form_nutrition.csv';
   } else {
     csv='Date,Weight (kg)\n';
@@ -2022,7 +2065,7 @@ function expCSV(type){
 function expXLSX(){
   if(typeof XLSX==='undefined'){toast('Loading — try again');return;}
   const wb=XLSX.utils.book_new();
-  const BLK='0A0A0A',DRK='161616',MID='1E1E1E',WHT='F5F5F0',GRY='A8A8A4',GRN='00B86B',RED='E11D2E',ONG='FF5A1F';
+  const BLK='0A0A0A',DRK='161616',MID='1E1E1E',WHT='F5F5F0',GRY='A8A8A4',GRN='00B86B',RED='E11D2E',ONG='FF5A1F',PNK='EC4899';
   function addRow(ws,rowData,ri,opts){
     rowData.forEach((val,ci)=>{
       const ref=XLSX.utils.encode_cell({r:ri,c:ci});
@@ -2049,12 +2092,12 @@ function expXLSX(){
   XLSX.utils.book_append_sheet(wb,ws1,'Workout Log');
 
   const ws2={};const nData=gN();
-  addRow(ws2,['FORM — NUTRITION LOG','','','','',''],0,{bold:true,sz:14,bg:BLK,color:ONG,align:'left'});
-  addRow(ws2,['Targets: 3200 kcal · 145g P · 380g C · 75g F','','','','',''],1,{bg:BLK,color:GRY,sz:9,align:'left'});
-  addRow(ws2,['Date','Food Item','Calories (kcal)','Protein (g)','Carbs (g)','Fat (g)'],2,[{bold:true,bg:MID},{bold:true,bg:MID,align:'left'},{bold:true,bg:MID},{bold:true,bg:MID},{bold:true,bg:MID},{bold:true,bg:MID}]);
+  addRow(ws2,['FORM — NUTRITION LOG','','','','','',''],0,{bold:true,sz:14,bg:BLK,color:ONG,align:'left'});
+  addRow(ws2,['Targets: 3200 kcal · 160g P · 370g C · 80g F · <50g Sugar','','','','','',''],1,{bg:BLK,color:GRY,sz:9,align:'left'});
+  addRow(ws2,['Date','Food Item','Calories (kcal)','Protein (g)','Carbs (g)','Fat (g)','Sugar (g)'],2,[{bold:true,bg:MID},{bold:true,bg:MID,align:'left'},{bold:true,bg:MID},{bold:true,bg:MID},{bold:true,bg:MID},{bold:true,bg:MID},{bold:true,bg:MID,color:PNK}]);
   r=3;let lastD='';
-  nData.forEach(f=>{if(f.date!==lastD){lastD=f.date;addRow(ws2,[f.date,'','','','',''],r,{bg:MID,color:ONG,sz:9,align:'left'});r++;}const bg=r%2===0?BLK:DRK;addRow(ws2,[f.date,f.name,f.cal,f.pro,f.carb,f.fat],r,[{bg,color:GRY,align:'left'},{bg,color:WHT,align:'left'},{bg,color:GRN,bold:true},{bg,color:GRY},{bg,color:GRY},{bg,color:GRY}]);r++;});
-  ws2['!cols']=[{wch:12},{wch:34},{wch:16},{wch:13},{wch:13},{wch:11}];setRange(ws2,r,5);
+  nData.forEach(f=>{if(f.date!==lastD){lastD=f.date;addRow(ws2,[f.date,'','','','','',''],r,{bg:MID,color:ONG,sz:9,align:'left'});r++;}const bg=r%2===0?BLK:DRK;addRow(ws2,[f.date,f.name,f.cal,f.pro,f.carb,f.fat,f.sugar||0],r,[{bg,color:GRY,align:'left'},{bg,color:WHT,align:'left'},{bg,color:GRN,bold:true},{bg,color:GRY},{bg,color:GRY},{bg,color:GRY},{bg,color:PNK}]);r++;});
+  ws2['!cols']=[{wch:12},{wch:34},{wch:16},{wch:13},{wch:13},{wch:11},{wch:11}];setRange(ws2,r,6);
   XLSX.utils.book_append_sheet(wb,ws2,'Nutrition Log');
 
   const ws3={};
@@ -2090,7 +2133,7 @@ function clrToday(){
   if(!confirm('Clear all of today\'s data?'))return;
   sW(gW().filter(x=>x.date!==td()));
   sN(gN().filter(x=>x.date!==td()));
-  Object.keys(localStorage).filter(k=>k.startsWith('as_'+td())).forEach(k=>localStorage.removeItem(k));
+  Object.keys(localStorage).filter(k=>k.startsWith('as_'+td())||k.startsWith('pt_'+td())).forEach(k=>localStorage.removeItem(k));
   renStats();toast('Today cleared');
 }
 
